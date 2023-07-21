@@ -18,12 +18,12 @@
   
   
   <title>画三角形 | Hexo</title>
-  <meta name="description" content="1.1 图形渲染管线1.1.1 概念图形渲染管线是个流水线，分为好几个阶段，主要的工作为：将3D空间中的坐标转换为屏幕空间的2D坐标，并最终把2D坐标转换为有颜色的像素，形成画面。   1.1.2 着色器图形渲染管线分为多个阶段，每个阶段会把前一个阶段的输出作为输入。每个阶段高度专门化，非常容易并行执行，因此大多数显卡都有成千上万个小处理核心，处理核心负责在GPU上为每个流水线阶段处运行各自的程序">
+  <meta name="description" content="1. 图形渲染管线1.1 概念图形渲染管线是个流水线，分为好几个阶段，主要的工作为：将3D空间中的坐标转换为屏幕空间的2D坐标，并最终把2D坐标转换为有颜色的像素，形成画面。   1.2 着色器图形渲染管线分为多个阶段，每个阶段会把前一个阶段的输出作为输入。每个阶段高度专门化，非常容易并行执行，因此大多数显卡都有成千上万个小处理核心，处理核心负责在GPU上为每个流水线阶段处运行各自的程序，达到在渲">
 <meta property="og:type" content="article">
 <meta property="og:title" content="画三角形">
 <meta property="og:url" content="https://raoyuqi.github.io/2023/07/17/graphic/opengl/%E7%94%BB%E4%B8%89%E8%A7%92%E5%BD%A2/index.html">
 <meta property="og:site_name" content="奇遇的博客">
-<meta property="og:description" content="1.1 图形渲染管线1.1.1 概念图形渲染管线是个流水线，分为好几个阶段，主要的工作为：将3D空间中的坐标转换为屏幕空间的2D坐标，并最终把2D坐标转换为有颜色的像素，形成画面。   1.1.2 着色器图形渲染管线分为多个阶段，每个阶段会把前一个阶段的输出作为输入。每个阶段高度专门化，非常容易并行执行，因此大多数显卡都有成千上万个小处理核心，处理核心负责在GPU上为每个流水线阶段处运行各自的程序">
+<meta property="og:description" content="1. 图形渲染管线1.1 概念图形渲染管线是个流水线，分为好几个阶段，主要的工作为：将3D空间中的坐标转换为屏幕空间的2D坐标，并最终把2D坐标转换为有颜色的像素，形成画面。   1.2 着色器图形渲染管线分为多个阶段，每个阶段会把前一个阶段的输出作为输入。每个阶段高度专门化，非常容易并行执行，因此大多数显卡都有成千上万个小处理核心，处理核心负责在GPU上为每个流水线阶段处运行各自的程序，达到在渲">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://raoyuqi.github.io/2023/07/17/graphic/opengl/%E7%94%BB%E4%B8%89%E8%A7%92%E5%BD%A2/%E7%94%BB%E4%B8%89%E8%A7%92%E5%BD%A2_1.jpg">
 <meta property="og:image" content="https://raoyuqi.github.io/2023/07/17/graphic/opengl/%E7%94%BB%E4%B8%89%E8%A7%92%E5%BD%A2/%E7%94%BB%E4%B8%89%E8%A7%92%E5%BD%A2_2.jpg">
@@ -31,8 +31,10 @@
 <meta property="og:image" content="https://raoyuqi.github.io/2023/07/17/graphic/opengl/%E7%94%BB%E4%B8%89%E8%A7%92%E5%BD%A2/%E7%94%BB%E4%B8%89%E8%A7%92%E5%BD%A2_4.jpg">
 <meta property="og:image" content="https://raoyuqi.github.io/2023/07/17/graphic/opengl/%E7%94%BB%E4%B8%89%E8%A7%92%E5%BD%A2/%E7%94%BB%E4%B8%89%E8%A7%92%E5%BD%A2_5.jpg">
 <meta property="article:published_time" content="2023-07-17T12:46:20.000Z">
-<meta property="article:modified_time" content="2023-07-17T13:00:46.010Z">
+<meta property="article:modified_time" content="2023-07-21T13:20:50.162Z">
 <meta property="article:author" content="John Doe">
+<meta property="article:tag" content="图形学">
+<meta property="article:tag" content="OpenGL">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="https://raoyuqi.github.io/2023/07/17/graphic/opengl/%E7%94%BB%E4%B8%89%E8%A7%92%E5%BD%A2/%E7%94%BB%E4%B8%89%E8%A7%92%E5%BD%A2_1.jpg">
   <!-- Canonical links -->
@@ -232,7 +234,7 @@
   <div class="widget">
     <h3 class="widget-title">分类</h3>
     <div class="widget-body">
-      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%9B%BE%E5%BD%A2%E5%AD%A6/">图形学</a><span class="category-list-count">1</span></li></ul>
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%9B%BE%E5%BD%A2%E5%AD%A6/">图形学</a><span class="category-list-count">5</span></li></ul>
     </div>
   </div>
 
@@ -242,7 +244,7 @@
   <div class="widget">
     <h3 class="widget-title">标签</h3>
     <div class="widget-body">
-      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/OpenGL/" rel="tag">OpenGL</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%9B%BE%E5%BD%A2%E5%AD%A6/" rel="tag">图形学</a><span class="tag-list-count">1</span></li></ul>
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/OpenGL/" rel="tag">OpenGL</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%9B%BE%E5%BD%A2%E5%AD%A6/" rel="tag">图形学</a><span class="tag-list-count">5</span></li></ul>
     </div>
   </div>
 
@@ -261,7 +263,7 @@
   <div class="widget">
     <h3 class="widget-title">归档</h3>
     <div class="widget-body">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/07/">七月 2023</a><span class="archive-list-count">5</span></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/07/">七月 2023</a><span class="archive-list-count">6</span></li></ul>
     </div>
   </div>
 
@@ -277,7 +279,22 @@
             
             <div class="item-inner">
               <p class="item-category">
-                
+                <a class="category-link" href="/categories/%E5%9B%BE%E5%BD%A2%E5%AD%A6/">图形学</a>
+              </p>
+              <p class="item-title">
+                <a href="/2023/07/21/graphic/opengl/%E7%BA%B9%E7%90%86/" class="title">纹理</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2023-07-21T12:56:56.000Z" itemprop="datePublished">2023-07-21</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/categories/%E5%9B%BE%E5%BD%A2%E5%AD%A6/">图形学</a>
               </p>
               <p class="item-title">
                 <a href="/2023/07/18/graphic/opengl/%E7%9D%80%E8%89%B2%E5%99%A8/" class="title">着色器</a>
@@ -292,7 +309,7 @@
             
             <div class="item-inner">
               <p class="item-category">
-                
+                <a class="category-link" href="/categories/%E5%9B%BE%E5%BD%A2%E5%AD%A6/">图形学</a>
               </p>
               <p class="item-title">
                 <a href="/2023/07/17/graphic/opengl/%E7%94%BB%E4%B8%89%E8%A7%92%E5%BD%A2/" class="title">画三角形</a>
@@ -307,7 +324,7 @@
             
             <div class="item-inner">
               <p class="item-category">
-                
+                <a class="category-link" href="/categories/%E5%9B%BE%E5%BD%A2%E5%AD%A6/">图形学</a>
               </p>
               <p class="item-title">
                 <a href="/2023/07/15/graphic/opengl/%E5%88%9B%E5%BB%BA%E7%AA%97%E5%8F%A3/" class="title">创建窗口</a>
@@ -329,21 +346,6 @@
               </p>
               <p class="item-date">
                 <time datetime="2023-07-13T13:35:40.000Z" itemprop="datePublished">2023-07-13</time>
-              </p>
-            </div>
-          </li>
-          
-          <li>
-            
-            <div class="item-inner">
-              <p class="item-category">
-                
-              </p>
-              <p class="item-title">
-                <a href="/2023/07/11/hello-world/" class="title">Hello World</a>
-              </p>
-              <p class="item-date">
-                <time datetime="2023-07-11T13:30:41.175Z" itemprop="datePublished">2023-07-11</time>
               </p>
             </div>
           </li>
@@ -381,7 +383,17 @@
 	</a>
 </span>
         
+  <span class="article-category">
+    <i class="icon icon-folder"></i>
+    <a class="article-category-link" href="/categories/%E5%9B%BE%E5%BD%A2%E5%AD%A6/">图形学</a>
+  </span>
+
         
+  <span class="article-tag">
+    <i class="icon icon-tags"></i>
+	<a class="article-tag-link-link" href="/tags/OpenGL/" rel="tag">OpenGL</a>, <a class="article-tag-link-link" href="/tags/%E5%9B%BE%E5%BD%A2%E5%AD%A6/" rel="tag">图形学</a>
+  </span>
+
 
         
 
@@ -391,13 +403,13 @@
     </div>
     <div class="article-entry marked-body" itemprop="articleBody">
       
-        <h1 id="1-1-图形渲染管线"><a href="#1-1-图形渲染管线" class="headerlink" title="1.1 图形渲染管线"></a>1.1 图形渲染管线</h1><h2 id="1-1-1-概念"><a href="#1-1-1-概念" class="headerlink" title="1.1.1 概念"></a>1.1.1 概念</h2><p>图形渲染管线是个流水线，分为好几个阶段，主要的工作为：将3D空间中的坐标转换为屏幕空间的2D坐标，并最终把2D坐标转换为有颜色的像素，形成画面。</p>
+        <h1 id="1-图形渲染管线"><a href="#1-图形渲染管线" class="headerlink" title="1. 图形渲染管线"></a>1. 图形渲染管线</h1><h2 id="1-1-概念"><a href="#1-1-概念" class="headerlink" title="1.1 概念"></a>1.1 概念</h2><p>图形渲染管线是个流水线，分为好几个阶段，主要的工作为：将3D空间中的坐标转换为屏幕空间的2D坐标，并最终把2D坐标转换为有颜色的像素，形成画面。</p>
 <br>
 
-<h2 id="1-1-2-着色器"><a href="#1-1-2-着色器" class="headerlink" title="1.1.2 着色器"></a>1.1.2 着色器</h2><p>图形渲染管线分为多个阶段，每个阶段会把前一个阶段的输出作为输入。每个阶段高度专门化，非常容易并行执行，因此大多数显卡都有成千上万个小处理核心，处理核心负责在GPU上为每个流水线阶段处运行各自的程序，达到在渲染管线中快速并行地处理数据，这些小程序就是着色器。OpenGL着色器是用OpenGL着色器语言(OpenGL Shading Language, GLSL)写的。</p>
+<h2 id="1-2-着色器"><a href="#1-2-着色器" class="headerlink" title="1.2 着色器"></a>1.2 着色器</h2><p>图形渲染管线分为多个阶段，每个阶段会把前一个阶段的输出作为输入。每个阶段高度专门化，非常容易并行执行，因此大多数显卡都有成千上万个小处理核心，处理核心负责在GPU上为每个流水线阶段处运行各自的程序，达到在渲染管线中快速并行地处理数据，这些小程序就是着色器。OpenGL着色器是用OpenGL着色器语言(OpenGL Shading Language, GLSL)写的。</p>
 <br>
 
-<h2 id="1-1-3-阶段"><a href="#1-1-3-阶段" class="headerlink" title="1.1.3 阶段"></a>1.1.3 阶段</h2><p>如图，蓝色部分是可以自定义的部分：</p>
+<h2 id="1-3-阶段"><a href="#1-3-阶段" class="headerlink" title="1.3 阶段"></a>1.3 阶段</h2><p>如图，蓝色部分是可以自定义的部分：</p>
 <ul>
 <li><img src="%E7%94%BB%E4%B8%89%E8%A7%92%E5%BD%A2_1.jpg" alt="图形渲染管线"></li>
 </ul>
@@ -428,7 +440,7 @@
 <p><strong>现代OpenGL中，至少定义一个顶点着色器和片段着色器。</strong></p>
 <br>
 
-<h1 id="2-1-绘制三角形"><a href="#2-1-绘制三角形" class="headerlink" title="2.1 绘制三角形"></a>2.1 绘制三角形</h1><ol>
+<h1 id="2-绘制三角形"><a href="#2-绘制三角形" class="headerlink" title="2. 绘制三角形"></a>2. 绘制三角形</h1><ol>
 <li>准备顶点数据</li>
 </ol>
 <p>tip: OpenGL是3D图形库，因此指定的坐标需要是3D坐标；OpenGL只处理标准化设备坐标，即-1.0到1.0范围内的坐标，并不是简单地把3D坐标转换为屏幕上的2D像素。</p>
@@ -521,7 +533,7 @@
 </ul>
 <br>
 
-<h1 id="3-1-元素缓冲对象"><a href="#3-1-元素缓冲对象" class="headerlink" title="3.1 元素缓冲对象"></a>3.1 元素缓冲对象</h1><p>元素缓冲对象(Element Buffer Object，EBO)，也叫索引缓冲对象(Index Buffer Object，IBO)。假设不绘制一个三角形而是绘制一个矩形。可以绘制两个三角形来组成一个矩形：</p>
+<h1 id="3-元素缓冲对象"><a href="#3-元素缓冲对象" class="headerlink" title="3. 元素缓冲对象"></a>3. 元素缓冲对象</h1><p>元素缓冲对象(Element Buffer Object，EBO)，也叫索引缓冲对象(Index Buffer Object，IBO)。假设不绘制一个三角形而是绘制一个矩形。可以绘制两个三角形来组成一个矩形：</p>
 <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">float</span> vertices[] = &#123;</span><br><span class="line">    <span class="comment">// 第一个三角形</span></span><br><span class="line">    <span class="number">0.5f</span>, <span class="number">0.5f</span>, <span class="number">0.0f</span>,   <span class="comment">// 右上角</span></span><br><span class="line">    <span class="number">0.5f</span>, <span class="number">-0.5f</span>, <span class="number">0.0f</span>,  <span class="comment">// 右下角</span></span><br><span class="line">    <span class="number">-0.5f</span>, <span class="number">0.5f</span>, <span class="number">0.0f</span>,  <span class="comment">// 左上角</span></span><br><span class="line">    <span class="comment">// 第二个三角形</span></span><br><span class="line">    <span class="number">0.5f</span>, <span class="number">-0.5f</span>, <span class="number">0.0f</span>,  <span class="comment">// 右下角</span></span><br><span class="line">    <span class="number">-0.5f</span>, <span class="number">-0.5f</span>, <span class="number">0.0f</span>, <span class="comment">// 左下角</span></span><br><span class="line">    <span class="number">-0.5f</span>, <span class="number">0.5f</span>, <span class="number">0.0f</span>   <span class="comment">// 左上角</span></span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
 
 <p>一个矩形只有4个而不是6个顶点，这样会产生50%的额外开销，如果有包括上千个三角形的模型，这会产生一大堆浪费。可以通过<strong>只储存不同的顶点，并设定绘制这些顶点的顺序。</strong>这样子只要储存4个顶点就能绘制矩形了，之后只要指定绘制的顺序就行。元素缓冲区对象就是用来做这个的。</p>
@@ -581,12 +593,6 @@ glPolygonMode(GL_FRONT_AND_BACK, GL_LINE)函数配置OpenGL如何绘制图元。
   </article>
   
     
-  <section id="comments">
-  	
-      <div id="vcomments"></div>
-    
-  </section>
-
 
   
 </div>
@@ -732,33 +738,6 @@ window.jQuery || document.write('<script src="js/jquery.min.js"><\/script>')
    
 
 
-
-
-   
-    
-  <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
-  <script src="//cdn.jsdelivr.net/npm/valine"></script>
-  <script type="text/javascript">
-  var GUEST = ['nick', 'mail', 'link'];
-  var meta = 'nick,mail,link';
-  meta = meta.split(',').filter(function(item) {
-    return GUEST.indexOf(item) > -1;
-  });
-  new Valine({
-    el: '#vcomments',
-    verify: false,
-    notify: false,
-    appId: '',
-    appKey: '',
-    placeholder: 'Just go go',
-    avatar: 'mm',
-    meta: meta,
-    pageSize: '10' || 10,
-    visitor: false
-  });
-  </script>
-
-     
 
 
 
