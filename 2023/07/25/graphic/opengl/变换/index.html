@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 6.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha256-HtsXJanqjKTc8vVQjO4YMhiqFoXkfBsjBWcX91T1jr8=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"raoyuqi.github.io","root":"/","images":"/images","scheme":"Muse","darkmode":false,"version":"8.17.1","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":{"enable":false,"style":null},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="1. 向量既有大小又有方向的量，称为向量。向量相等的依据：方向相同且大小相等，如下图起点不同的两个向量 $\vec{v}$ 和 $\vec{w}$ 是相等的：    向量数学表示：$\vec{v}&#x3D;\begin{pmatrix} x \\ y \\ z \end{pmatrix}$  2. 向量运算2.1 向量与标量$\begin{pmatrix} x \\ y \\ z \end{pmatrix">
+<meta property="og:type" content="article">
+<meta property="og:title" content="变换">
+<meta property="og:url" content="https://raoyuqi.github.io/2023/07/25/graphic/opengl/%E5%8F%98%E6%8D%A2/index.html">
+<meta property="og:site_name" content="奇遇的博客">
+<meta property="og:description" content="1. 向量既有大小又有方向的量，称为向量。向量相等的依据：方向相同且大小相等，如下图起点不同的两个向量 $\vec{v}$ 和 $\vec{w}$ 是相等的：    向量数学表示：$\vec{v}&#x3D;\begin{pmatrix} x \\ y \\ z \end{pmatrix}$  2. 向量运算2.1 向量与标量$\begin{pmatrix} x \\ y \\ z \end{pmatrix">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://raoyuqi.github.io/2023/07/25/graphic/opengl/%E5%8F%98%E6%8D%A2/%E5%8F%98%E6%8D%A2_1.jpg">
+<meta property="og:image" content="https://raoyuqi.github.io/2023/07/25/graphic/opengl/%E5%8F%98%E6%8D%A2/%E5%8F%98%E6%8D%A2_2.jpg">
+<meta property="og:image" content="https://raoyuqi.github.io/2023/07/25/graphic/opengl/%E5%8F%98%E6%8D%A2/%E5%8F%98%E6%8D%A2_3.jpg">
+<meta property="og:image" content="https://raoyuqi.github.io/2023/07/25/graphic/opengl/%E5%8F%98%E6%8D%A2/%E5%8F%98%E6%8D%A2_4.jpg">
+<meta property="og:image" content="https://raoyuqi.github.io/2023/07/25/graphic/opengl/%E5%8F%98%E6%8D%A2/%E5%8F%98%E6%8D%A2_5.jpg">
+<meta property="og:image" content="https://raoyuqi.github.io/2023/07/25/graphic/opengl/%E5%8F%98%E6%8D%A2/%E5%8F%98%E6%8D%A2_6.jpg">
+<meta property="og:image" content="https://raoyuqi.github.io/2023/07/25/graphic/opengl/%E5%8F%98%E6%8D%A2/%E5%8F%98%E6%8D%A2_7.gif">
+<meta property="article:published_time" content="2023-07-25T13:32:02.000Z">
+<meta property="article:modified_time" content="2023-07-26T13:52:25.161Z">
+<meta property="article:author" content="John Doe">
+<meta property="article:tag" content="图形学">
+<meta property="article:tag" content="OpenGL">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://raoyuqi.github.io/2023/07/25/graphic/opengl/%E5%8F%98%E6%8D%A2/%E5%8F%98%E6%8D%A2_1.jpg">
+
+
+<link rel="canonical" href="https://raoyuqi.github.io/2023/07/25/graphic/opengl/%E5%8F%98%E6%8D%A2/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":"","permalink":"https://raoyuqi.github.io/2023/07/25/graphic/opengl/%E5%8F%98%E6%8D%A2/","path":"2023/07/25/graphic/opengl/变换/","title":"变换"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>变换 | 奇遇的博客</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+<!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
+<!-- hexo injector head_end end --><link rel="alternate" href="/atom.xml" title="奇遇的博客" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">奇遇的博客</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#1-%E5%90%91%E9%87%8F"><span class="nav-number">1.</span> <span class="nav-text">1. 向量</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#2-%E5%90%91%E9%87%8F%E8%BF%90%E7%AE%97"><span class="nav-number">2.</span> <span class="nav-text">2. 向量运算</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#2-1-%E5%90%91%E9%87%8F%E4%B8%8E%E6%A0%87%E9%87%8F"><span class="nav-number">2.1.</span> <span class="nav-text">2.1 向量与标量</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-2-%E5%90%91%E9%87%8F%E5%8F%96%E5%8F%8D"><span class="nav-number">2.2.</span> <span class="nav-text">2.2 向量取反</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-3-%E5%90%91%E9%87%8F%E5%8A%A0%E5%87%8F"><span class="nav-number">2.3.</span> <span class="nav-text">2.3 向量加减</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-4-%E5%90%91%E9%87%8F%E9%95%BF%E5%BA%A6%E5%92%8C%E5%8D%95%E4%BD%8D%E5%90%91%E9%87%8F"><span class="nav-number">2.4.</span> <span class="nav-text">2.4 向量长度和单位向量</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-4-%E5%90%91%E9%87%8F%E7%9B%B8%E4%B9%98"><span class="nav-number">2.5.</span> <span class="nav-text">2.4 向量相乘</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#3-%E7%9F%A9%E9%98%B5"><span class="nav-number">3.</span> <span class="nav-text">3. 矩阵</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#3-1-%E7%9F%A9%E9%98%B5%E7%9B%B8%E4%B9%98"><span class="nav-number">3.1.</span> <span class="nav-text">3.1 矩阵相乘</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-2-%E7%9F%A9%E9%98%B5%E4%B9%98%E4%BB%A5%E5%90%91%E9%87%8F"><span class="nav-number">3.2.</span> <span class="nav-text">3.2 矩阵乘以向量</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-3-%E7%9F%A9%E9%98%B5%E7%BB%84%E5%90%88"><span class="nav-number">3.3.</span> <span class="nav-text">3.3 矩阵组合</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#4-GLM"><span class="nav-number">4.</span> <span class="nav-text">4. GLM</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#5-%E6%89%A9%E5%B1%95%E9%98%85%E8%AF%BB"><span class="nav-number">5.</span> <span class="nav-text">5. 扩展阅读</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">John Doe</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">8</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">1</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">2</span>
+        <span class="site-state-item-name">标签</span>
+      </div>
+  </nav>
+</div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://raoyuqi.github.io/2023/07/25/graphic/opengl/%E5%8F%98%E6%8D%A2/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="John Doe">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="奇遇的博客">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="变换 | 奇遇的博客">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          变换
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2023-07-25 21:32:02" itemprop="dateCreated datePublished" datetime="2023-07-25T21:32:02+08:00">2023-07-25</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2023-07-26 21:52:25" itemprop="dateModified" datetime="2023-07-26T21:52:25+08:00">2023-07-26</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E5%9B%BE%E5%BD%A2%E5%AD%A6/" itemprop="url" rel="index"><span itemprop="name">图形学</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><h1 id="1-向量"><a href="#1-向量" class="headerlink" title="1. 向量"></a>1. 向量</h1><p>既有大小又有方向的量，称为向量。向量相等的依据：方向相同且大小相等，如下图起点不同的两个向量 $\vec{v}$ 和 $\vec{w}$ 是相等的：</p>
+<ul>
+<li><img src="变换_1.jpg" alt="图1.1"></li>
+</ul>
+<p>向量数学表示：$\vec{v}=\begin{pmatrix} x \\ y \\ z \end{pmatrix}$</p>
+<p><br></p>
+<h1 id="2-向量运算"><a href="#2-向量运算" class="headerlink" title="2. 向量运算"></a>2. 向量运算</h1><h2 id="2-1-向量与标量"><a href="#2-1-向量与标量" class="headerlink" title="2.1 向量与标量"></a>2.1 向量与标量</h2><p>$\begin{pmatrix} x \\ y \\ z \end{pmatrix} + 1 = \begin{pmatrix} x+1 \\ y+1 \\ z+1 \end{pmatrix}$</p>
+<h2 id="2-2-向量取反"><a href="#2-2-向量取反" class="headerlink" title="2.2 向量取反"></a>2.2 向量取反</h2><p>$-\vec{v}=-\begin{pmatrix} x \\ y \\ z \end{pmatrix}=\begin{pmatrix} -x \\ -y \\ -z \end{pmatrix}$</p>
+<h2 id="2-3-向量加减"><a href="#2-3-向量加减" class="headerlink" title="2.3 向量加减"></a>2.3 向量加减</h2><p>$\vec{v}+\vec{w}=\begin{pmatrix} 1 \\ 2 \\ 3 \end{pmatrix}+\begin{pmatrix} 4 \\ 5 \\ 6 \end{pmatrix}=\begin{pmatrix} 5 \\ 7 \\ 9 \end{pmatrix}$</p>
+<ul>
+<li><img src="变换_2.jpg" alt="图2.3.1"></li>
+</ul>
+<p>$\vec{v}-\vec{w}=\begin{pmatrix} 1 \\ 2 \\ 3 \end{pmatrix}-\begin{pmatrix} 4 \\ 5 \\ 6 \end{pmatrix}=\begin{pmatrix} -3 \\ -3 \\ -3 \end{pmatrix}$</p>
+<ul>
+<li><img src="变换_3.jpg" alt="图2.3.2"></li>
+</ul>
+<h2 id="2-4-向量长度和单位向量"><a href="#2-4-向量长度和单位向量" class="headerlink" title="2.4 向量长度和单位向量"></a>2.4 向量长度和单位向量</h2><p>向量长度：$||\vec{v}||=\sqrt{x^2+y^2}$</p>
+<p>单位向量：$\widehat{n} = \frac{\vec{v}}{||\vec{v}||}$</p>
+<ul>
+<li><img src="变换_4.jpg" alt="图2.3.3"></li>
+</ul>
+<h2 id="2-4-向量相乘"><a href="#2-4-向量相乘" class="headerlink" title="2.4 向量相乘"></a>2.4 向量相乘</h2><ol>
+<li>点乘</li>
+</ol>
+<p>$\vec{v} \cdot \vec{w} = ||\vec{v}|| \cdot ||\vec{w}|| \cdot \cos\vartheta$</p>
+<p>两个单位向量的点乘结果为两个向量的夹角：$\vec{v} \cdot \vec{w} = 1 \cdot 1 \cdot \cos\vartheta = \cos\vartheta$</p>
+<p>几何意义：判断两个向量方向的相似性，即两个向量是否垂直、平行、方向相反等。</p>
+<p>点乘计算：$\begin{pmatrix} 1 \\ -1 \\ 0 \end{pmatrix} \cdot \begin{pmatrix} 0 \\ 1 \\ 0 \end{pmatrix} = (0.6 * 0) + (-1 * 1) + (0 * 0) = -1$，反余弦可得两向量夹角180度，方向相反。</p>
+<ol>
+<li>叉乘</li>
+</ol>
+<p>叉乘会生成一个垂直于两个向量的新向量，叉乘可以用来判断两个向量的位置关系，即一个向量是在另一个向量的右边还是左边。</p>
+<p>叉乘计算：$\begin{pmatrix} A_x \\ A_y \\ A_z \end{pmatrix} \cdot \begin{pmatrix} B_x \\ B_y \\ B_z \end{pmatrix} = \begin{pmatrix} A_y \cdot B_z-A_z \cdot B_y \\ A_z \cdot B_x-A_x \cdot B_z \\ A_x \cdot B_y-A_y \cdot B_x \end{pmatrix}$</p>
+<p><br></p>
+<h1 id="3-矩阵"><a href="#3-矩阵" class="headerlink" title="3. 矩阵"></a>3. 矩阵</h1><p>矩阵就是一个矩形的数字、符号或表达式数组，矩阵中每一项叫做矩阵的元素。</p>
+<h2 id="3-1-矩阵相乘"><a href="#3-1-矩阵相乘" class="headerlink" title="3.1 矩阵相乘"></a>3.1 矩阵相乘</h2><p>条件：</p>
+<ol>
+<li>左侧矩阵的列数与右侧矩阵的行数相等，两个矩阵才能相乘</li>
+<li>矩阵相乘不遵守交换律，$A \cdot B \not= B \cdot A$</li>
+</ol>
+<p>例：</p>
+<p>$\left[\begin{matrix} 1 &amp; 2 \\ 3 &amp; 4 \\ \end{matrix}\right] \cdot \left[\begin{matrix} 5 &amp; 6 \\ 7 &amp; 8 \\ \end{matrix}\right]=\left[\begin{matrix} 1 \cdot 5+2 \cdot 7 &amp; 1 \cdot 6+2 \cdot 8 \\ 3 \cdot 5+4 \cdot 7 &amp; 3 \cdot 6+4 \cdot 8 \\ \end{matrix}\right]=\left[\begin{matrix} 19 &amp; 22 \\ 43 &amp; 50 \\ \end{matrix}\right]$</p>
+<h2 id="3-2-矩阵乘以向量"><a href="#3-2-矩阵乘以向量" class="headerlink" title="3.2 矩阵乘以向量"></a>3.2 矩阵乘以向量</h2><p>矩阵可以用来变换向量：</p>
+<ol>
+<li>缩放</li>
+</ol>
+<p>$\left[\begin{matrix} S_1 &amp; 0 &amp; 0 &amp; 0 \\ 0 &amp; S_2 &amp; 0 &amp; 0 \\ 0 &amp; 0 &amp; S_3 &amp; 0 \\ 0 &amp; 0 &amp; 0 &amp; 1 \\ \end{matrix}\right] \cdot \left(\begin{matrix} x \\ y \\ z \\ w \\ \end{matrix}\right)=\left(\begin{matrix} S_1 \cdot x \\ S_2 \cdot y \\ S_3 \cdot z \\ w \\ \end{matrix}\right)$</p>
+<ul>
+<li><img src="变换_5.jpg" alt="图3.2.1"></li>
+</ul>
+<ol>
+<li>平移</li>
+</ol>
+<p>$\left[\begin{matrix} 1 &amp; 0 &amp; 0 &amp; T_x \\ 0 &amp; 1 &amp; 0 &amp; T_y \\ 0 &amp; 0 &amp; 1 &amp; T_z \\ 0 &amp; 0 &amp; 0 &amp; 1 \\ \end{matrix}\right] \cdot \left(\begin{matrix} x \\ y \\ z \\ 1 \\ \end{matrix}\right)=\left(\begin{matrix} x+T_x \\ y+T_y \\ z+T_z \\ 1 \\ \end{matrix}\right)$</p>
+<pre>
+向量的w分量也叫齐次坐标，可以把x、y和z坐标分别除以w坐标从而将其次坐标转换为3D向量。如果w分类为1，则表示的是坐标，如果w分量为0，则表示的是向量。
+
+其次坐标的一个主要用途是将平移操作由仿射变换转换为线性变换。
+</pre>
+
+<ol>
+<li>旋转</li>
+</ol>
+<p>绕x轴：$\left[\begin{matrix} 1 &amp; 0 &amp; 0 &amp; 0 \\ 0 &amp; \cos\vartheta &amp; -\sin\vartheta &amp; 0 \\ 0 &amp; \sin\vartheta &amp; \cos\vartheta &amp; 0 \\ 0 &amp; 0 &amp; 0 &amp; 1 \\ \end{matrix}\right]$</p>
+<p>绕y轴：$\left[\begin{matrix} \cos\vartheta &amp; 0 &amp; \sin\vartheta &amp; 0 \\ 0 &amp; 1 &amp; 0 &amp; 0 \\ -\sin\vartheta &amp; 0 &amp; \cos\vartheta &amp; 0 \\ 0 &amp; 0 &amp; 0 &amp; 1 \\ \end{matrix}\right]$</p>
+<p>绕z轴：$\left[\begin{matrix} \cos\vartheta &amp; -\sin\vartheta &amp; 0 &amp; 0 \\ \sin\vartheta &amp; \cos\vartheta &amp; 0 &amp; 0 \\ 0 &amp; 0 &amp; 1 &amp; 0 \\ 0 &amp; 0 &amp; 0 &amp; 1 \\ \end{matrix}\right]$</p>
+<h2 id="3-3-矩阵组合"><a href="#3-3-矩阵组合" class="headerlink" title="3.3 矩阵组合"></a>3.3 矩阵组合</h2><p>将多个矩阵相乘可以将多个变换组合到一个矩阵中，比如先缩放再平移：$M=Trans \cdot Scale -&gt; Trans \cdot Scale \cdot \vec{v}=M \cdot \vec{v}$，矩阵相乘时，最右边的矩阵会先和向量相乘，所以这边表示的操作是先缩放后平移。</p>
+<p><br></p>
+<h1 id="4-GLM"><a href="#4-GLM" class="headerlink" title="4. GLM"></a>4. GLM</h1><p>GLM是OpenGL Mathematics的缩写，这是一个OpenGL数学库，点击<a target="_blank" rel="noopener" href="https://learnopengl-cn.github.io/01%20Getting%20started/07%20Transformations/">链接</a>进行下载，然后把头文件的根目录复制到includes文件夹就可以使用了，这里用的是低于0.99版本的GLM。</p>
+<p>使用GLM库进行平移操作：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;glm/glm.hpp&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;glm/gtc/matrix_transform.hpp&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;glm/gtc/type_ptr.hpp&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 创建一个向量</span></span><br><span class="line"><span class="function">glm::vec4 <span class="title">vec</span><span class="params">(<span class="number">1.0f</span>, <span class="number">0.0f</span>, <span class="number">0.0f</span>, <span class="number">1.0f</span>)</span></span>;</span><br><span class="line"><span class="comment">// 创建一个平移矩阵，平移(1, 1, 0)个单位</span></span><br><span class="line">glm::mat4 trans;</span><br><span class="line">trans = glm::<span class="built_in">translate</span>(trans, glm::<span class="built_in">vec3</span>(<span class="number">1.0f</span>, <span class="number">1.0f</span>, <span class="number">0.0f</span>));</span><br><span class="line"><span class="comment">// 平移操作</span></span><br><span class="line">vec = trans * vec;</span><br></pre></td></tr></table></figure>
+<p>将变换应用到图形中：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 创建一个矩阵</span></span><br><span class="line">glm::mat4 trans;</span><br><span class="line"><span class="comment">// 绕z轴逆时针旋转90度，glm::radians将角度转化为弧度</span></span><br><span class="line">trans = glm::<span class="built_in">rotate</span>(trans, glm::<span class="built_in">radians</span>(<span class="number">90.0f</span>), glm::<span class="built_in">vec3</span>(<span class="number">0.0</span>, <span class="number">0.0</span>, <span class="number">1.0</span>));</span><br><span class="line"><span class="comment">// 缩放0.5倍</span></span><br><span class="line">trans = glm::<span class="built_in">scale</span>(trans, glm::<span class="built_in">vec3</span>(<span class="number">0.5</span>, <span class="number">0.5</span>, <span class="number">0.5</span>));</span><br><span class="line"></span><br><span class="line"><span class="comment">// 把矩阵传递给顶点着色器</span></span><br><span class="line"><span class="type">unsigned</span> <span class="type">int</span> transformLoc = <span class="built_in">glGetUniformLocation</span>(shader.ID, <span class="string">&quot;transform&quot;</span>);</span><br><span class="line"><span class="comment">// GLM的默认布局就是列主序，所以并不需要转置矩阵</span></span><br><span class="line"><span class="built_in">glUniformMatrix4fv</span>(transformLoc, <span class="number">1</span>, GL_FALSE, glm::<span class="built_in">value_ptr</span>(trans));</span><br></pre></td></tr></table></figure>
+<p>顶点着色器：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#version 330 core</span></span><br><span class="line"><span class="built_in">layout</span> (location = <span class="number">0</span>) in vec3 aPos;</span><br><span class="line"><span class="built_in">layout</span> (location = <span class="number">1</span>) in vec2 aTexCoord;</span><br><span class="line"></span><br><span class="line">out vec2 TexCoord;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 矩阵</span></span><br><span class="line">uniform mat4 transform;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="comment">// 变换操作</span></span><br><span class="line">    gl_Position = transform * <span class="built_in">vec4</span>(aPos, <span class="number">1.0f</span>);</span><br><span class="line">    TexCoord = <span class="built_in">vec2</span>(aTexCoord.x, <span class="number">1.0</span> - aTexCoord.y);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>运行程序：</p>
+<ul>
+<li><img src="变换_6.jpg" alt="图4.1"></li>
+</ul>
+<p>让矩形随着时间进行旋转：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">glm::mat4 trans;</span><br><span class="line">trans = glm::<span class="built_in">translate</span>(trans, glm::<span class="built_in">vec3</span>(<span class="number">0.5f</span>, <span class="number">-0.5f</span>, <span class="number">0.0f</span>));</span><br><span class="line">trans = glm::<span class="built_in">rotate</span>(trans, (<span class="type">float</span>)<span class="built_in">glfwGetTime</span>(), glm::<span class="built_in">vec3</span>(<span class="number">0.0f</span>, <span class="number">0.0f</span>, <span class="number">1.0f</span>));</span><br></pre></td></tr></table></figure>
+<p>矩阵的乘法是从右往左的，因此这里会先绕(0, 0, 1)旋转，然后再平移到屏幕右下角，虽然在逻辑上是先平移后旋转。</p>
+<p>运行程序：</p>
+<ul>
+<li><img src="变换_7.gif" alt="图4.2"><br><br></li>
+</ul>
+<h1 id="5-扩展阅读"><a href="#5-扩展阅读" class="headerlink" title="5. 扩展阅读"></a>5. 扩展阅读</h1><p><a target="_blank" rel="noopener" href="https://learnopengl-cn.github.io/01%20Getting%20started/07%20Transformations/">线性代数本质</a>：<a target="_blank" rel="noopener" href="https://space.bilibili.com/88461692#!/channel/detail?cid=9450">中文字幕版本</a></p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E5%9B%BE%E5%BD%A2%E5%AD%A6/" rel="tag"># 图形学</a>
+              <a href="/tags/OpenGL/" rel="tag"># OpenGL</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2023/07/21/graphic/opengl/%E7%BA%B9%E7%90%86/" rel="prev" title="纹理">
+                  <i class="fa fa-chevron-left"></i> 纹理
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2023/07/26/graphic/opengl/%E5%9D%90%E6%A0%87/" rel="next" title="坐标">
+                  坐标 <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2023</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">John Doe</span>
+  </div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/muse/" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/schemes/muse.js"></script><script src="/js/next-boot.js"></script>
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">true</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"none","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js","integrity":"sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI="}}</script>
+<script src="/js/third-party/math/mathjax.js"></script>
+
+
+
+</body>
+</html>

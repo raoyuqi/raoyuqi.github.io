@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 6.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha256-HtsXJanqjKTc8vVQjO4YMhiqFoXkfBsjBWcX91T1jr8=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"raoyuqi.github.io","root":"/","images":"/images","scheme":"Muse","darkmode":false,"version":"8.17.1","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":{"enable":false,"style":null},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="1. 概述对物体的不同操作有不同的意义，你如：当需要对物体进行修改的时候，在局部空间中操作会比较合理；如果要对一个物体做出一个相对于其它物体位置的操作时，在世界坐标系中更合理，等等。因此也衍生出了不同的坐标空间。  2. 坐标空间 局部空间  物体所在的坐标空间，即对象最开始所在的地方。建模软件中创建了一个立方体，立方体的原点有可能位于(0, 0, 0)，有可能创建的所有模型都以(0, 0, 0)">
+<meta property="og:type" content="article">
+<meta property="og:title" content="坐标">
+<meta property="og:url" content="https://raoyuqi.github.io/2023/07/26/graphic/opengl/%E5%9D%90%E6%A0%87/index.html">
+<meta property="og:site_name" content="奇遇的博客">
+<meta property="og:description" content="1. 概述对物体的不同操作有不同的意义，你如：当需要对物体进行修改的时候，在局部空间中操作会比较合理；如果要对一个物体做出一个相对于其它物体位置的操作时，在世界坐标系中更合理，等等。因此也衍生出了不同的坐标空间。  2. 坐标空间 局部空间  物体所在的坐标空间，即对象最开始所在的地方。建模软件中创建了一个立方体，立方体的原点有可能位于(0, 0, 0)，有可能创建的所有模型都以(0, 0, 0)">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://raoyuqi.github.io/2023/07/26/graphic/opengl/%E5%9D%90%E6%A0%87/%E5%9D%90%E6%A0%87_1.jpg">
+<meta property="og:image" content="https://raoyuqi.github.io/2023/07/26/graphic/opengl/%E5%9D%90%E6%A0%87/%E5%9D%90%E6%A0%87_2.jpg">
+<meta property="og:image" content="https://raoyuqi.github.io/2023/07/26/graphic/opengl/%E5%9D%90%E6%A0%87/%E5%9D%90%E6%A0%87_3.jpg">
+<meta property="og:image" content="https://raoyuqi.github.io/2023/07/26/graphic/opengl/%E5%9D%90%E6%A0%87/%E5%9D%90%E6%A0%87_4.jpg">
+<meta property="og:image" content="https://raoyuqi.github.io/2023/07/26/graphic/opengl/%E5%9D%90%E6%A0%87/%E5%9D%90%E6%A0%87_5.gif">
+<meta property="og:image" content="https://raoyuqi.github.io/2023/07/26/graphic/opengl/%E5%9D%90%E6%A0%87/%E5%9D%90%E6%A0%87_6.jpg">
+<meta property="article:published_time" content="2023-07-26T13:53:31.000Z">
+<meta property="article:modified_time" content="2023-07-26T14:20:18.946Z">
+<meta property="article:author" content="John Doe">
+<meta property="article:tag" content="图形学">
+<meta property="article:tag" content="OpenGL">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://raoyuqi.github.io/2023/07/26/graphic/opengl/%E5%9D%90%E6%A0%87/%E5%9D%90%E6%A0%87_1.jpg">
+
+
+<link rel="canonical" href="https://raoyuqi.github.io/2023/07/26/graphic/opengl/%E5%9D%90%E6%A0%87/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":"","permalink":"https://raoyuqi.github.io/2023/07/26/graphic/opengl/%E5%9D%90%E6%A0%87/","path":"2023/07/26/graphic/opengl/坐标/","title":"坐标"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>坐标 | 奇遇的博客</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+<!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
+<!-- hexo injector head_end end --><link rel="alternate" href="/atom.xml" title="奇遇的博客" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">奇遇的博客</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#1-%E6%A6%82%E8%BF%B0"><span class="nav-number">1.</span> <span class="nav-text">1. 概述</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#2-%E5%9D%90%E6%A0%87%E7%A9%BA%E9%97%B4"><span class="nav-number">2.</span> <span class="nav-text">2. 坐标空间</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#3-%E5%AE%9E%E7%8E%B03D%E6%95%88%E6%9E%9C"><span class="nav-number">3.</span> <span class="nav-text">3. 实现3D效果</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#5-%E6%9B%B4%E5%A4%9A%E7%AB%8B%E6%96%B9%E4%BD%93"><span class="nav-number">4.</span> <span class="nav-text">5. 更多立方体</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">John Doe</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">8</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">1</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">2</span>
+        <span class="site-state-item-name">标签</span>
+      </div>
+  </nav>
+</div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://raoyuqi.github.io/2023/07/26/graphic/opengl/%E5%9D%90%E6%A0%87/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="John Doe">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="奇遇的博客">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="坐标 | 奇遇的博客">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          坐标
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2023-07-26 21:53:31 / 修改时间：22:20:18" itemprop="dateCreated datePublished" datetime="2023-07-26T21:53:31+08:00">2023-07-26</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E5%9B%BE%E5%BD%A2%E5%AD%A6/" itemprop="url" rel="index"><span itemprop="name">图形学</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><h1 id="1-概述"><a href="#1-概述" class="headerlink" title="1. 概述"></a>1. 概述</h1><p>对物体的不同操作有不同的意义，你如：当需要对物体进行修改的时候，在局部空间中操作会比较合理；如果要对一个物体做出一个相对于其它物体位置的操作时，在世界坐标系中更合理，等等。因此也衍生出了不同的坐标空间。</p>
+<p><br></p>
+<h1 id="2-坐标空间"><a href="#2-坐标空间" class="headerlink" title="2. 坐标空间"></a>2. 坐标空间</h1><ol>
+<li>局部空间</li>
+</ol>
+<p>物体所在的坐标空间，即对象最开始所在的地方。建模软件中创建了一个立方体，立方体的原点有可能位于(0, 0, 0)，有可能创建的所有模型都以(0, 0, 0)为初始位置，然而它们会最终出现在世界的不同位置。所以，模型的所有顶点都是在局部空间中：它们相对于物体来说都是局部的。</p>
+<ol>
+<li>世界空间</li>
+</ol>
+<p>指顶点相对于游戏世界的坐标。如果希望将物体分散在世界上摆放，就需要将物体变换到世界空间。该变换是由模型矩阵(Model Matrix)实现的。模型矩阵能通过对物体进行位移、缩放、旋转来将它置于它本应该在的位置或朝向。经过模型矩阵变换后，物体的坐标将会从局部变换到世界空间。</p>
+<ol>
+<li>观察空间</li>
+</ol>
+<p>以摄像机为视角观察到的空间，因此也称摄像机空间。观察空间是将世界空间坐标转化为用户视野前方的坐标而产生的结果，因此观察空间就是从摄像机的视角所观察到的空间。改变换由观察矩阵(View Matrix)实现。</p>
+<ol>
+<li>裁剪空间</li>
+</ol>
+<p>OpenGL希望所有的坐标都在一个特定的范围内，所有不在范围内的顶点都会被裁剪丢弃，剩下才会进行处理，节省不必要的消耗。将顶点从观察空间变换到裁剪空间需要使用投影矩阵。指定了一个坐标范围，如：-100到100，投影矩阵会将该指定范围转换为标准化设备的范围(-1.0, 1.0)。所有在(-1.0, 1.0)之外的顶点都会被裁剪，比如顶点坐标为(80, 101)会被裁剪，因为转换后y坐标超出了范围，应该丢弃。</p>
+<pre>
+如果只是图元(Primitive)，例如三角形，的一部分超出了裁剪体积(Clipping Volume)，则OpenGL会重新构建这个三角形为一个或多个三角形让它能够适合这个裁剪范围。
+</pre>
+
+<p>由投影矩阵创建的观察箱(Viewing Box)被称为平截头体(Frustum)，每个出现在平截头体范围内的坐标都会最终出现在用户的屏幕上。将特定范围内的坐标转化到标准化设备坐标系的过程被称之为投影(Projection)。</p>
+<p>当所有顶点被变换到裁剪空间，会执行透视除法，在这个过程中做的就是将位置向量的x，y，z分量分别除以向量的齐次w分量；目的是把4D裁剪空间的齐次坐标变换为3D标准化设备坐标。这一步会在每一个顶点着色器运行的最后被自动执行。</p>
+<p>在这一阶段之后，最终的坐标将会被映射到屏幕空间中（即glViewport中的设定），并被变换成片段。投影矩阵有两种：</p>
+<ul>
+<li><p>正交投影</p>
+</li>
+<li><p><img src="坐标_1.jpg" alt="图2.1"></p>
+</li>
+</ul>
+<p>正交投影定义了一个类似立方体的平截头箱，它定义了一个裁剪空间，在这空间之外的顶点都会被裁剪掉。创建一个正射投影矩阵需要指定可见平截头体的宽、高和长度。上面的平截头体定义了可见的坐标，它由由宽、高、近(Near)平面和远(Far)平面所指定。任何出现在近平面之前或远平面之后的坐标都会被裁剪掉。</p>
+<p>由于每个向量的w分量都没有进行改变（w分量等于1.0），因此透视除法后坐标不变，出现的视觉效果是，进出的物体和远处的物体大小一致，造成不真实感。</p>
+<p>GLM创建正交投影矩阵：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 前两个参数指定了平截头体的左右坐标，第三和第四参数指定了平截头体的底部和顶部</span></span><br><span class="line"><span class="comment">// 通过这四个参数定义近平面和远平面的大小，然后第五和第六个参数则定义了近平面和远平面的距离</span></span><br><span class="line"><span class="comment">// 这个投影矩阵会将处于这些x，y，z值范围内的坐标变换为标准化设备坐标</span></span><br><span class="line">glm::<span class="built_in">ortho</span>(<span class="number">0.0f</span>, <span class="number">800.0f</span>, <span class="number">0.0f</span>, <span class="number">600.0f</span>, <span class="number">0.1f</span>, <span class="number">100.0f</span>);</span><br></pre></td></tr></table></figure>
+<ul>
+<li><p>透视投影</p>
+</li>
+<li><p><img src="坐标_2.jpg" alt="图2.2"></p>
+</li>
+</ul>
+<p>现实生活中近大远小的现象称为透视，要实现透视效果需要使用透视投影矩阵来完成。透视投影矩阵将给定的平截头体范围映射到裁剪空间，还会修改每个顶点坐标的w值，从而使得离观察者越远的顶点坐标w分量越大。被变换到裁剪空间的坐标都会在-w到w的范围之间（任何不在这个范围的坐标都会被裁剪掉）。OpenGL对在范围内的顶点进行透视除法操作：</p>
+<p>$out=\begin{pmatrix} x/w \\ y/w \\ z/w \end{pmatrix}$</p>
+<p>由于越远的物体w分量越大，因此模拟除了透视效果，这是w重要用途之一。</p>
+<p>GLM创建透视投影矩阵：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 第一个参数定义了fov的值，表示的是视野(Field of View)，想要一个真实的观察效果，它的值通常设置为45.0f，但想要一个末日风格的结果你可以将其设置一个更大的值</span></span><br><span class="line"><span class="comment">// 第二个参数设置了宽高比，由视口的宽除以高所得</span></span><br><span class="line"><span class="comment">// 第三和第四个参数设置了平截头体的近和远平面。通常设置近距离为0.1f，而远距离设为100.0f。所有在近平面和远平面内且处于平截头体内的顶点都会被渲染</span></span><br><span class="line">glm::mat4 proj = glm::<span class="built_in">perspective</span>(glm::<span class="built_in">radians</span>(<span class="number">45.0f</span>), (<span class="type">float</span>)width/(<span class="type">float</span>)height, <span class="number">0.1f</span>, <span class="number">100.0f</span>);</span><br></pre></td></tr></table></figure>
+<pre>
+当你把透视矩阵的 near 值设置太大时（如10.0f），OpenGL会将靠近摄像机的坐标（在0.0f和10.0f之间）都裁剪掉，这会导致在游戏中的视觉效果：太过靠近一个物体的时候你的视线会直接穿过去。
+</pre>
+
+<p>由于正交投影没有使用透视，远处的物体不会显得更小，所以正射投影主要用于二维渲染以及一些建筑或工程的程序，在这些场景中更希望顶点不会被透视所干扰。</p>
+<ol>
+<li>屏幕空间</li>
+</ol>
+<p>顶点着色器的输出要求所有的顶点都在裁剪空间内，因此先将顶点从局部空间转换到裁剪空间：</p>
+<p>$V_{clip}=M_{projection} \cdot M_{view} \cdot M_{model} \cdot V_{local}$</p>
+<p>转换到裁剪空间后，最后会将结果赋值给顶点着色器的gl_Position，OpenGL将会自动进行透视除法和裁剪操作。</p>
+<p>OpenGL接着会对裁剪坐标执行透视除法将它们变换到标准化设备坐标。OpenGL使用glViewPort内部的参数将标准化设备坐标映射到屏幕坐标，每个坐标都关联了一个屏幕上的点，这个过程称为视口变换。</p>
+<p><br></p>
+<p>物体变换过程：</p>
+<ul>
+<li><img src="坐标_3.jpg" alt="图2.3"></li>
+</ul>
+<ol>
+<li>局部坐标是对象相对于局部原点的坐标，是物体起始的坐标</li>
+<li>将局部坐标变换为世界空间坐标，这些坐标相对于世界的全局原点，它们会和其它物体一起相对于世界的原点进行摆放</li>
+<li>将世界坐标变换为观察空间坐标，使得每个坐标都是从摄像机或者说观察者的角度进行观察的</li>
+<li>坐标到达观察空间之后，需要将其投影到裁剪坐标。裁剪坐标会被处理至-1.0到1.0的范围内，并判断哪些顶点将会出现在屏幕上</li>
+<li>最后将裁剪坐标变换为屏幕坐标，这是视口变换(Viewport Transform)的过程。视口变换将位于-1.0到1.0范围的坐标变换到由glViewport函数所定义的坐标范围内。最后变换出来的坐标将会送到光栅器，将其转化为片段</li>
+</ol>
+<p><br></p>
+<h1 id="3-实现3D效果"><a href="#3-实现3D效果" class="headerlink" title="3. 实现3D效果"></a>3. 实现3D效果</h1><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 创建模型矩阵</span></span><br><span class="line"><span class="comment">// 绕x轴旋转-55度</span></span><br><span class="line">glm::mat4 model;</span><br><span class="line">model = glm::<span class="built_in">rotate</span>(model, glm::<span class="built_in">radians</span>(<span class="number">-55.0f</span>), glm::<span class="built_in">vec3</span>(<span class="number">1.0f</span>, <span class="number">0.0f</span>, <span class="number">0.0f</span>));</span><br><span class="line"></span><br><span class="line"><span class="comment">// 创建观察矩阵</span></span><br><span class="line"><span class="comment">// 往z轴正方向平移3个单位</span></span><br><span class="line">glm::mat4 view;</span><br><span class="line">view = glm::<span class="built_in">translate</span>(view, glm::<span class="built_in">vec3</span>(<span class="number">0.0f</span>, <span class="number">0.0f</span>, <span class="number">-3.0f</span>));</span><br><span class="line"></span><br><span class="line"><span class="comment">// 创建透视投影矩阵</span></span><br><span class="line">glm::mat4 projection;</span><br><span class="line">projection = glm::<span class="built_in">perspective</span>(glm::<span class="built_in">radians</span>(<span class="number">45.0f</span>), screenWidth / screenHeight, <span class="number">0.1f</span>, <span class="number">100.0f</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 将矩阵传递到顶点着色器中</span></span><br><span class="line"><span class="type">int</span> modelLoc = <span class="built_in">glGetUniformLocation</span>(shader.ID, <span class="string">&quot;model&quot;</span>));</span><br><span class="line"><span class="built_in">glUniformMatrix4fv</span>(modelLoc, <span class="number">1</span>, GL_FALSE, glm::<span class="built_in">value_ptr</span>(model));</span><br><span class="line"></span><br><span class="line"><span class="type">int</span> viewLoc = <span class="built_in">glGetUniformLocation</span>(shader.ID, <span class="string">&quot;view&quot;</span>));</span><br><span class="line"><span class="built_in">glUniformMatrix4fv</span>(viewLoc, <span class="number">1</span>, GL_FALSE, glm::<span class="built_in">value_ptr</span>(view));</span><br><span class="line"></span><br><span class="line"><span class="type">int</span> projectionLoc = <span class="built_in">glGetUniformLocation</span>(shader.ID, <span class="string">&quot;model&quot;</span>));</span><br><span class="line"><span class="built_in">glUniformMatrix4fv</span>(projectionLoc, <span class="number">1</span>, GL_FALSE, glm::<span class="built_in">value_ptr</span>(projection));</span><br></pre></td></tr></table></figure>
+<p>顶点着色器：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#version 330 core</span></span><br><span class="line"><span class="built_in">layout</span> (location = <span class="number">0</span>) in vec3 aPos;</span><br><span class="line">...</span><br><span class="line">uniform mat4 model;</span><br><span class="line">uniform mat4 view;</span><br><span class="line">uniform mat4 projection;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="comment">// 将顶点变换到裁剪空间中，矩阵乘法要从右向左</span></span><br><span class="line">    gl_Position = projection * view * model * <span class="built_in">vec4</span>(aPos, <span class="number">1.0</span>);</span><br><span class="line">    ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>效果：</p>
+<ul>
+<li><img src="坐标_4.jpg" alt="图3.1"></li>
+</ul>
+<p><br></p>
+<ol>
+<li>3D立方体</li>
+</ol>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 36个顶点数据，包含顶点坐标和纹理</span></span><br><span class="line"><span class="type">float</span> vertices[] = &#123;</span><br><span class="line">    <span class="number">-0.5f</span>, <span class="number">-0.5f</span>, <span class="number">-0.5f</span>,  <span class="number">0.0f</span>, <span class="number">0.0f</span>,</span><br><span class="line">     <span class="number">0.5f</span>, <span class="number">-0.5f</span>, <span class="number">-0.5f</span>,  <span class="number">1.0f</span>, <span class="number">0.0f</span>,</span><br><span class="line">     <span class="number">0.5f</span>,  <span class="number">0.5f</span>, <span class="number">-0.5f</span>,  <span class="number">1.0f</span>, <span class="number">1.0f</span>,</span><br><span class="line">     <span class="number">0.5f</span>,  <span class="number">0.5f</span>, <span class="number">-0.5f</span>,  <span class="number">1.0f</span>, <span class="number">1.0f</span>,</span><br><span class="line">    <span class="number">-0.5f</span>,  <span class="number">0.5f</span>, <span class="number">-0.5f</span>,  <span class="number">0.0f</span>, <span class="number">1.0f</span>,</span><br><span class="line">    <span class="number">-0.5f</span>, <span class="number">-0.5f</span>, <span class="number">-0.5f</span>,  <span class="number">0.0f</span>, <span class="number">0.0f</span>,</span><br><span class="line"></span><br><span class="line">    <span class="number">-0.5f</span>, <span class="number">-0.5f</span>,  <span class="number">0.5f</span>,  <span class="number">0.0f</span>, <span class="number">0.0f</span>,</span><br><span class="line">     <span class="number">0.5f</span>, <span class="number">-0.5f</span>,  <span class="number">0.5f</span>,  <span class="number">1.0f</span>, <span class="number">0.0f</span>,</span><br><span class="line">     <span class="number">0.5f</span>,  <span class="number">0.5f</span>,  <span class="number">0.5f</span>,  <span class="number">1.0f</span>, <span class="number">1.0f</span>,</span><br><span class="line">     <span class="number">0.5f</span>,  <span class="number">0.5f</span>,  <span class="number">0.5f</span>,  <span class="number">1.0f</span>, <span class="number">1.0f</span>,</span><br><span class="line">    <span class="number">-0.5f</span>,  <span class="number">0.5f</span>,  <span class="number">0.5f</span>,  <span class="number">0.0f</span>, <span class="number">1.0f</span>,</span><br><span class="line">    <span class="number">-0.5f</span>, <span class="number">-0.5f</span>,  <span class="number">0.5f</span>,  <span class="number">0.0f</span>, <span class="number">0.0f</span>,</span><br><span class="line"></span><br><span class="line">    <span class="number">-0.5f</span>,  <span class="number">0.5f</span>,  <span class="number">0.5f</span>,  <span class="number">1.0f</span>, <span class="number">0.0f</span>,</span><br><span class="line">    <span class="number">-0.5f</span>,  <span class="number">0.5f</span>, <span class="number">-0.5f</span>,  <span class="number">1.0f</span>, <span class="number">1.0f</span>,</span><br><span class="line">    <span class="number">-0.5f</span>, <span class="number">-0.5f</span>, <span class="number">-0.5f</span>,  <span class="number">0.0f</span>, <span class="number">1.0f</span>,</span><br><span class="line">    <span class="number">-0.5f</span>, <span class="number">-0.5f</span>, <span class="number">-0.5f</span>,  <span class="number">0.0f</span>, <span class="number">1.0f</span>,</span><br><span class="line">    <span class="number">-0.5f</span>, <span class="number">-0.5f</span>,  <span class="number">0.5f</span>,  <span class="number">0.0f</span>, <span class="number">0.0f</span>,</span><br><span class="line">    <span class="number">-0.5f</span>,  <span class="number">0.5f</span>,  <span class="number">0.5f</span>,  <span class="number">1.0f</span>, <span class="number">0.0f</span>,</span><br><span class="line"></span><br><span class="line">     <span class="number">0.5f</span>,  <span class="number">0.5f</span>,  <span class="number">0.5f</span>,  <span class="number">1.0f</span>, <span class="number">0.0f</span>,</span><br><span class="line">     <span class="number">0.5f</span>,  <span class="number">0.5f</span>, <span class="number">-0.5f</span>,  <span class="number">1.0f</span>, <span class="number">1.0f</span>,</span><br><span class="line">     <span class="number">0.5f</span>, <span class="number">-0.5f</span>, <span class="number">-0.5f</span>,  <span class="number">0.0f</span>, <span class="number">1.0f</span>,</span><br><span class="line">     <span class="number">0.5f</span>, <span class="number">-0.5f</span>, <span class="number">-0.5f</span>,  <span class="number">0.0f</span>, <span class="number">1.0f</span>,</span><br><span class="line">     <span class="number">0.5f</span>, <span class="number">-0.5f</span>,  <span class="number">0.5f</span>,  <span class="number">0.0f</span>, <span class="number">0.0f</span>,</span><br><span class="line">     <span class="number">0.5f</span>,  <span class="number">0.5f</span>,  <span class="number">0.5f</span>,  <span class="number">1.0f</span>, <span class="number">0.0f</span>,</span><br><span class="line"></span><br><span class="line">    <span class="number">-0.5f</span>, <span class="number">-0.5f</span>, <span class="number">-0.5f</span>,  <span class="number">0.0f</span>, <span class="number">1.0f</span>,</span><br><span class="line">     <span class="number">0.5f</span>, <span class="number">-0.5f</span>, <span class="number">-0.5f</span>,  <span class="number">1.0f</span>, <span class="number">1.0f</span>,</span><br><span class="line">     <span class="number">0.5f</span>, <span class="number">-0.5f</span>,  <span class="number">0.5f</span>,  <span class="number">1.0f</span>, <span class="number">0.0f</span>,</span><br><span class="line">     <span class="number">0.5f</span>, <span class="number">-0.5f</span>,  <span class="number">0.5f</span>,  <span class="number">1.0f</span>, <span class="number">0.0f</span>,</span><br><span class="line">    <span class="number">-0.5f</span>, <span class="number">-0.5f</span>,  <span class="number">0.5f</span>,  <span class="number">0.0f</span>, <span class="number">0.0f</span>,</span><br><span class="line">    <span class="number">-0.5f</span>, <span class="number">-0.5f</span>, <span class="number">-0.5f</span>,  <span class="number">0.0f</span>, <span class="number">1.0f</span>,</span><br><span class="line"></span><br><span class="line">    <span class="number">-0.5f</span>,  <span class="number">0.5f</span>, <span class="number">-0.5f</span>,  <span class="number">0.0f</span>, <span class="number">1.0f</span>,</span><br><span class="line">     <span class="number">0.5f</span>,  <span class="number">0.5f</span>, <span class="number">-0.5f</span>,  <span class="number">1.0f</span>, <span class="number">1.0f</span>,</span><br><span class="line">     <span class="number">0.5f</span>,  <span class="number">0.5f</span>,  <span class="number">0.5f</span>,  <span class="number">1.0f</span>, <span class="number">0.0f</span>,</span><br><span class="line">     <span class="number">0.5f</span>,  <span class="number">0.5f</span>,  <span class="number">0.5f</span>,  <span class="number">1.0f</span>, <span class="number">0.0f</span>,</span><br><span class="line">    <span class="number">-0.5f</span>,  <span class="number">0.5f</span>,  <span class="number">0.5f</span>,  <span class="number">0.0f</span>, <span class="number">0.0f</span>,</span><br><span class="line">    <span class="number">-0.5f</span>,  <span class="number">0.5f</span>, <span class="number">-0.5f</span>,  <span class="number">0.0f</span>, <span class="number">1.0f</span></span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 修改模型矩阵，让立方体随时间旋转</span></span><br><span class="line">model = glm::<span class="built_in">rotate</span>(model, (<span class="type">float</span>)<span class="built_in">glfwGetTime</span>() * glm::<span class="built_in">radians</span>(<span class="number">20.0f</span>), glm::<span class="built_in">vec3</span>(<span class="number">0.5f</span>, <span class="number">1.0f</span>, <span class="number">0.0f</span>));</span><br><span class="line"></span><br><span class="line"><span class="comment">// 开启深度缓冲</span></span><br><span class="line"><span class="built_in">glEnable</span>(GL_DEPTH_TEST);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 在每次渲染迭代之前清除深度缓冲，否则前一帧的深度信息仍然保存在缓冲中</span></span><br><span class="line"><span class="built_in">glClear</span>(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 绘制</span></span><br><span class="line"><span class="built_in">glDrawArrays</span>(GL_TRIANGLES, <span class="number">0</span>, <span class="number">36</span>);</span><br></pre></td></tr></table></figure>
+<p>效果：</p>
+<ul>
+<li><img src="坐标_5.gif" alt="图4.1"></li>
+</ul>
+<p><br></p>
+<h1 id="5-更多立方体"><a href="#5-更多立方体" class="headerlink" title="5. 更多立方体"></a>5. 更多立方体</h1><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 每个立方体的位置</span></span><br><span class="line">glm::vec3 cubePositions[] = &#123;</span><br><span class="line">    glm::<span class="built_in">vec3</span>( <span class="number">0.0f</span>,  <span class="number">0.0f</span>,  <span class="number">0.0f</span>), </span><br><span class="line">    glm::<span class="built_in">vec3</span>( <span class="number">2.0f</span>,  <span class="number">5.0f</span>, <span class="number">-15.0f</span>), </span><br><span class="line">    glm::<span class="built_in">vec3</span>(<span class="number">-1.5f</span>, <span class="number">-2.2f</span>, <span class="number">-2.5f</span>),  </span><br><span class="line">    glm::<span class="built_in">vec3</span>(<span class="number">-3.8f</span>, <span class="number">-2.0f</span>, <span class="number">-12.3f</span>),  </span><br><span class="line">    glm::<span class="built_in">vec3</span>( <span class="number">2.4f</span>, <span class="number">-0.4f</span>, <span class="number">-3.5f</span>),  </span><br><span class="line">    glm::<span class="built_in">vec3</span>(<span class="number">-1.7f</span>,  <span class="number">3.0f</span>, <span class="number">-7.5f</span>),  </span><br><span class="line">    glm::<span class="built_in">vec3</span>( <span class="number">1.3f</span>, <span class="number">-2.0f</span>, <span class="number">-2.5f</span>),  </span><br><span class="line">    glm::<span class="built_in">vec3</span>( <span class="number">1.5f</span>,  <span class="number">2.0f</span>, <span class="number">-2.5f</span>), </span><br><span class="line">    glm::<span class="built_in">vec3</span>( <span class="number">1.5f</span>,  <span class="number">0.2f</span>, <span class="number">-1.5f</span>), </span><br><span class="line">    glm::<span class="built_in">vec3</span>(<span class="number">-1.3f</span>,  <span class="number">1.0f</span>, <span class="number">-1.5f</span>)  </span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">...</span><br><span class="line"></span><br><span class="line"><span class="built_in">glBindVertexArray</span>(VAO);</span><br><span class="line"><span class="keyword">for</span>(<span class="type">unsigned</span> <span class="type">int</span> i = <span class="number">0</span>; i &lt; <span class="number">10</span>; i++)</span><br><span class="line">&#123;</span><br><span class="line">    <span class="comment">// 赋予不同的模型矩阵</span></span><br><span class="line">    glm::mat4 model;</span><br><span class="line">    model = glm::<span class="built_in">translate</span>(model, cubePositions[i]);</span><br><span class="line">    <span class="type">float</span> angle = <span class="number">20.0f</span> * i; </span><br><span class="line">    model = glm::<span class="built_in">rotate</span>(model, glm::<span class="built_in">radians</span>(angle), glm::<span class="built_in">vec3</span>(<span class="number">1.0f</span>, <span class="number">0.3f</span>, <span class="number">0.5f</span>));</span><br><span class="line">    ourShader.<span class="built_in">setMat4</span>(<span class="string">&quot;model&quot;</span>, model);</span><br><span class="line"></span><br><span class="line">    <span class="built_in">glDrawArrays</span>(GL_TRIANGLES, <span class="number">0</span>, <span class="number">36</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>效果：</p>
+<ul>
+<li><img src="坐标_6.jpg" alt="图4.1"></li>
+</ul>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E5%9B%BE%E5%BD%A2%E5%AD%A6/" rel="tag"># 图形学</a>
+              <a href="/tags/OpenGL/" rel="tag"># OpenGL</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2023/07/25/graphic/opengl/%E5%8F%98%E6%8D%A2/" rel="prev" title="变换">
+                  <i class="fa fa-chevron-left"></i> 变换
+                </a>
+            </div>
+            <div class="post-nav-item">
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2023</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">John Doe</span>
+  </div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/muse/" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/schemes/muse.js"></script><script src="/js/next-boot.js"></script>
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">true</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"none","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js","integrity":"sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI="}}</script>
+<script src="/js/third-party/math/mathjax.js"></script>
+
+
+
+</body>
+</html>
