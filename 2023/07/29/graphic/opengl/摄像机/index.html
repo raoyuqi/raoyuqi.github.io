@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 6.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha256-HtsXJanqjKTc8vVQjO4YMhiqFoXkfBsjBWcX91T1jr8=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"raoyuqi.github.io","root":"/","images":"/images","scheme":"Muse","darkmode":false,"version":"8.17.1","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":{"enable":false,"style":null},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="1. 构建摄像机1.1 确定位置1glm::vec3 cameraPos &#x3D; glm::vec3(0.0f, 0.0f, 3.0f); 1.2 确定z轴1234&#x2F;&#x2F; 让摄像机指向场景原点glm::vec3 cameraTarget &#x3D; glm::vec3(0.0f, 0.0f, 0.0f);&#x2F;&#x2F; 向量相减，让相机的z轴正方向看向世界的z轴负方向glm::vec3 cameraDirection &#x3D;">
+<meta property="og:type" content="article">
+<meta property="og:title" content="摄像机">
+<meta property="og:url" content="https://raoyuqi.github.io/2023/07/29/graphic/opengl/%E6%91%84%E5%83%8F%E6%9C%BA/index.html">
+<meta property="og:site_name" content="奇遇的博客">
+<meta property="og:description" content="1. 构建摄像机1.1 确定位置1glm::vec3 cameraPos &#x3D; glm::vec3(0.0f, 0.0f, 3.0f); 1.2 确定z轴1234&#x2F;&#x2F; 让摄像机指向场景原点glm::vec3 cameraTarget &#x3D; glm::vec3(0.0f, 0.0f, 0.0f);&#x2F;&#x2F; 向量相减，让相机的z轴正方向看向世界的z轴负方向glm::vec3 cameraDirection &#x3D;">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://raoyuqi.github.io/2023/07/29/graphic/opengl/%E6%91%84%E5%83%8F%E6%9C%BA/%E6%91%84%E5%83%8F%E6%9C%BA_1.jpg">
+<meta property="og:image" content="https://raoyuqi.github.io/2023/07/29/graphic/opengl/%E6%91%84%E5%83%8F%E6%9C%BA/%E6%91%84%E5%83%8F%E6%9C%BA_2.gif">
+<meta property="og:image" content="https://raoyuqi.github.io/2023/07/29/graphic/opengl/%E6%91%84%E5%83%8F%E6%9C%BA/%E6%91%84%E5%83%8F%E6%9C%BA_3.gif">
+<meta property="og:image" content="https://raoyuqi.github.io/2023/07/29/graphic/opengl/%E6%91%84%E5%83%8F%E6%9C%BA/%E6%91%84%E5%83%8F%E6%9C%BA_4.jpg">
+<meta property="og:image" content="https://raoyuqi.github.io/2023/07/29/graphic/opengl/%E6%91%84%E5%83%8F%E6%9C%BA/%E6%91%84%E5%83%8F%E6%9C%BA_5.jpg">
+<meta property="og:image" content="https://raoyuqi.github.io/2023/07/29/graphic/opengl/%E6%91%84%E5%83%8F%E6%9C%BA/%E6%91%84%E5%83%8F%E6%9C%BA_6.gif">
+<meta property="article:published_time" content="2023-07-29T02:12:24.000Z">
+<meta property="article:modified_time" content="2023-07-29T03:31:34.544Z">
+<meta property="article:author" content="John Doe">
+<meta property="article:tag" content="图形学">
+<meta property="article:tag" content="OpenGL">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://raoyuqi.github.io/2023/07/29/graphic/opengl/%E6%91%84%E5%83%8F%E6%9C%BA/%E6%91%84%E5%83%8F%E6%9C%BA_1.jpg">
+
+
+<link rel="canonical" href="https://raoyuqi.github.io/2023/07/29/graphic/opengl/%E6%91%84%E5%83%8F%E6%9C%BA/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":"","permalink":"https://raoyuqi.github.io/2023/07/29/graphic/opengl/%E6%91%84%E5%83%8F%E6%9C%BA/","path":"2023/07/29/graphic/opengl/摄像机/","title":"摄像机"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>摄像机 | 奇遇的博客</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+<!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
+<!-- hexo injector head_end end --><link rel="alternate" href="/atom.xml" title="奇遇的博客" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">奇遇的博客</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#1-%E6%9E%84%E5%BB%BA%E6%91%84%E5%83%8F%E6%9C%BA"><span class="nav-number">1.</span> <span class="nav-text">1. 构建摄像机</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-1-%E7%A1%AE%E5%AE%9A%E4%BD%8D%E7%BD%AE"><span class="nav-number">1.1.</span> <span class="nav-text">1.1 确定位置</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#1-2-%E7%A1%AE%E5%AE%9Az%E8%BD%B4"><span class="nav-number">1.2.</span> <span class="nav-text">1.2 确定z轴</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#1-3-%E7%A1%AE%E5%AE%9Ax%E8%BD%B4"><span class="nav-number">1.3.</span> <span class="nav-text">1.3 确定x轴</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#1-4-%E7%A1%AE%E5%AE%9Ay%E8%BD%B4"><span class="nav-number">1.4.</span> <span class="nav-text">1.4 确定y轴</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#2-GLM%E6%9E%84%E5%BB%BA%E8%A7%82%E5%AF%9F%E7%A9%BA%E9%97%B4%E7%9F%A9%E9%98%B5"><span class="nav-number">2.</span> <span class="nav-text">2. GLM构建观察空间矩阵</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#3-%E8%87%AA%E7%94%B1%E7%A7%BB%E5%8A%A8"><span class="nav-number">3.</span> <span class="nav-text">3. 自由移动</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#4-%E8%A7%86%E8%A7%92%E7%A7%BB%E5%8A%A8"><span class="nav-number">4.</span> <span class="nav-text">4. 视角移动</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#4-1-%E6%AC%A7%E6%8B%89%E8%A7%92"><span class="nav-number">4.1.</span> <span class="nav-text">4.1 欧拉角</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-2-%E9%BC%A0%E6%A0%87%E8%BE%93%E5%85%A5"><span class="nav-number">4.2.</span> <span class="nav-text">4.2 鼠标输入</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-3-%E7%BC%A9%E6%94%BE"><span class="nav-number">4.3.</span> <span class="nav-text">4.3 缩放</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#5-%E6%91%84%E5%83%8F%E6%9C%BA%E7%B1%BB"><span class="nav-number">5.</span> <span class="nav-text">5. 摄像机类</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#6-%E6%89%A9%E5%B1%95%E9%98%85%E8%AF%BB"><span class="nav-number">6.</span> <span class="nav-text">6. 扩展阅读</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">John Doe</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">9</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">1</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">2</span>
+        <span class="site-state-item-name">标签</span>
+      </div>
+  </nav>
+</div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://raoyuqi.github.io/2023/07/29/graphic/opengl/%E6%91%84%E5%83%8F%E6%9C%BA/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="John Doe">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="奇遇的博客">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="摄像机 | 奇遇的博客">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          摄像机
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2023-07-29 10:12:24 / 修改时间：11:31:34" itemprop="dateCreated datePublished" datetime="2023-07-29T10:12:24+08:00">2023-07-29</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E5%9B%BE%E5%BD%A2%E5%AD%A6/" itemprop="url" rel="index"><span itemprop="name">图形学</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><h1 id="1-构建摄像机"><a href="#1-构建摄像机" class="headerlink" title="1. 构建摄像机"></a>1. 构建摄像机</h1><h2 id="1-1-确定位置"><a href="#1-1-确定位置" class="headerlink" title="1.1 确定位置"></a>1.1 确定位置</h2><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">glm::vec3 cameraPos = glm::<span class="built_in">vec3</span>(<span class="number">0.0f</span>, <span class="number">0.0f</span>, <span class="number">3.0f</span>);</span><br></pre></td></tr></table></figure>
+<h2 id="1-2-确定z轴"><a href="#1-2-确定z轴" class="headerlink" title="1.2 确定z轴"></a>1.2 确定z轴</h2><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 让摄像机指向场景原点</span></span><br><span class="line">glm::vec3 cameraTarget = glm::<span class="built_in">vec3</span>(<span class="number">0.0f</span>, <span class="number">0.0f</span>, <span class="number">0.0f</span>);</span><br><span class="line"><span class="comment">// 向量相减，让相机的z轴正方向看向世界的z轴负方向</span></span><br><span class="line">glm::vec3 cameraDirection = glm::<span class="built_in">normalize</span>(cameraPos - cameraTarget);</span><br></pre></td></tr></table></figure>
+<h2 id="1-3-确定x轴"><a href="#1-3-确定x轴" class="headerlink" title="1.3 确定x轴"></a>1.3 确定x轴</h2><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 先定义一个上向量</span></span><br><span class="line">glm::vec3 up = glm::<span class="built_in">vec3</span>(<span class="number">0.0f</span>, <span class="number">1.0f</span>, <span class="number">0.0f</span>);</span><br><span class="line"><span class="comment">// y,z叉乘得到x轴正方向</span></span><br><span class="line">glm::vec3 cameraRight = glm::<span class="built_in">normalize</span>(glm::<span class="built_in">cross</span>(up, cameraDirection));</span><br></pre></td></tr></table></figure>
+<h2 id="1-4-确定y轴"><a href="#1-4-确定y轴" class="headerlink" title="1.4 确定y轴"></a>1.4 确定y轴</h2><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// z,x叉乘得到y轴正方向</span></span><br><span class="line">glm::vec3 cameraUp = glm::<span class="built_in">cross</span>(cameraDirection, cameraRight);</span><br></pre></td></tr></table></figure>
+<p>摄像机坐标系如图：</p>
+<ul>
+<li><img src="摄像机_1.jpg" alt="图1.4.1"></li>
+</ul>
+<p><br></p>
+<h1 id="2-GLM构建观察空间矩阵"><a href="#2-GLM构建观察空间矩阵" class="headerlink" title="2. GLM构建观察空间矩阵"></a>2. GLM构建观察空间矩阵</h1><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">glm::mat4 view;</span><br><span class="line"><span class="comment">// 传入摄像机位置，目标方向，和向上向量构建观察矩阵</span></span><br><span class="line">view = glm::<span class="built_in">lookAt</span>(glm::<span class="built_in">vec3</span>(<span class="number">0.0f</span>, <span class="number">0.0f</span>, <span class="number">3.0f</span>), glm::<span class="built_in">vec3</span>(<span class="number">0.0f</span>, <span class="number">0.0f</span>, <span class="number">0.0f</span>), glm::<span class="built_in">vec3</span>(<span class="number">0.0f</span>, <span class="number">1.0f</span>, <span class="number">0.0f</span>));</span><br></pre></td></tr></table></figure>
+<p>实现相机绕原点旋转：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 半径</span></span><br><span class="line"><span class="type">float</span> radius = <span class="number">10.0f</span>;</span><br><span class="line"><span class="comment">// 画圆</span></span><br><span class="line"><span class="type">float</span> camX = <span class="built_in">sin</span>(<span class="built_in">glfwGetTime</span>()) * radius;</span><br><span class="line"><span class="type">float</span> camZ = <span class="built_in">cos</span>(<span class="built_in">glfwGetTime</span>()) * radius;</span><br><span class="line">glm::mat4 view;</span><br><span class="line">view = glm::<span class="built_in">lookAt</span>(glm::<span class="built_in">vec3</span>(camX, <span class="number">0.0</span>, camZ), glm::<span class="built_in">vec3</span>(<span class="number">0.0</span>, <span class="number">0.0</span>, <span class="number">0.0</span>), glm::<span class="built_in">vec3</span>(<span class="number">0.0</span>, <span class="number">1.0</span>, <span class="number">0.0</span>)); </span><br></pre></td></tr></table></figure>
+<p>效果：</p>
+<ul>
+<li><img src="摄像机_2.gif" alt="图2.1"></li>
+</ul>
+<p><br></p>
+<h1 id="3-自由移动"><a href="#3-自由移动" class="headerlink" title="3. 自由移动"></a>3. 自由移动</h1><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">...</span><br><span class="line"></span><br><span class="line">glm::vec3 cameraPos   = glm::<span class="built_in">vec3</span>(<span class="number">0.0f</span>, <span class="number">0.0f</span>,  <span class="number">3.0f</span>);</span><br><span class="line">glm::vec3 cameraFront = glm::<span class="built_in">vec3</span>(<span class="number">0.0f</span>, <span class="number">0.0f</span>, <span class="number">-1.0f</span>); <span class="comment">// 看向z轴负方向</span></span><br><span class="line">glm::vec3 cameraUp    = glm::<span class="built_in">vec3</span>(<span class="number">0.0f</span>, <span class="number">1.0f</span>,  <span class="number">0.0f</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 观察矩阵始终看向z轴负方向</span></span><br><span class="line">view = glm::<span class="built_in">lookAt</span>(cameraPos, cameraPos + cameraFront, cameraUp);</span><br><span class="line"></span><br><span class="line">...</span><br><span class="line"></span><br><span class="line"><span class="comment">// 监听键盘输入</span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">processInput</span><span class="params">(GLFWwindow *window)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    ...</span><br><span class="line">    <span class="type">float</span> cameraSpeed = <span class="number">0.05f</span>;</span><br><span class="line">    <span class="keyword">if</span> (<span class="built_in">glfwGetKey</span>(window, GLFW_KEY_W) == GLFW_PRESS)</span><br><span class="line">        cameraPos += cameraSpeed * cameraFront;</span><br><span class="line">    <span class="keyword">if</span> (<span class="built_in">glfwGetKey</span>(window, GLFW_KEY_S) == GLFW_PRESS)</span><br><span class="line">        cameraPos -= cameraSpeed * cameraFront;</span><br><span class="line">    <span class="keyword">if</span> (<span class="built_in">glfwGetKey</span>(window, GLFW_KEY_A) == GLFW_PRESS)</span><br><span class="line">        cameraPos -= glm::<span class="built_in">normalize</span>(glm::<span class="built_in">cross</span>(cameraFront, cameraUp)) * cameraSpeed; <span class="comment">// 减去叉乘得到x轴正方向，往左移动, normalize保证匀速</span></span><br><span class="line">    <span class="keyword">if</span> (<span class="built_in">glfwGetKey</span>(window, GLFW_KEY_D) == GLFW_PRESS)</span><br><span class="line">        cameraPos += glm::<span class="built_in">normalize</span>(glm::<span class="built_in">cross</span>(cameraFront, cameraUp)) * cameraSpeed; <span class="comment">// 加上叉乘得到x轴正方向，往右移动, normalize保证匀速</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>调整移动速度：</p>
+<p>根据处理器的能力不同，不能保证不同设备每秒绘制相同帧数。导致配置的不同，有些人可能移动很快，而有些人会移动很慢。实现不同设备匀速：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 当前帧与上一帧的时间差</span></span><br><span class="line"><span class="type">float</span> deltaTime = <span class="number">0.0f</span>;</span><br><span class="line"><span class="comment">// 上一帧的时间</span></span><br><span class="line"><span class="type">float</span> lastFrame = <span class="number">0.0f</span>;</span><br><span class="line"></span><br><span class="line">...</span><br><span class="line"></span><br><span class="line"><span class="type">float</span> currentFrame = <span class="built_in">glfwGetTime</span>();</span><br><span class="line"><span class="comment">// 更新渲染当前帧花费的时间</span></span><br><span class="line">deltaTime = currentFrame - lastFrame;</span><br><span class="line">lastFrame = currentFrame;</span><br><span class="line"></span><br><span class="line">...</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">processInput</span><span class="params">(GLFWwindow *window)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="comment">// 使用时间去平衡速度：帧率高的deltaTime小，速度慢，帧率低的deltaTime大，速度快</span></span><br><span class="line">    <span class="type">float</span> cameraSpeed = <span class="number">2.5f</span> * deltaTime;</span><br><span class="line">    ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>效果：</p>
+<ul>
+<li><img src="摄像机_3.gif" alt="图3.1"></li>
+</ul>
+<p><br></p>
+<h1 id="4-视角移动"><a href="#4-视角移动" class="headerlink" title="4. 视角移动"></a>4. 视角移动</h1><h2 id="4-1-欧拉角"><a href="#4-1-欧拉角" class="headerlink" title="4.1 欧拉角"></a>4.1 欧拉角</h2><p>欧拉角(Euler Angle)是可以表示3D空间中任何旋转的3个值，由莱昂哈德·欧拉(Leonhard Euler)提出。一共有3种欧拉角：俯仰角(Pitch)、偏航角(Yaw)和滚转角(Roll)，如下图：</p>
+<ul>
+<li><img src="摄像机_4.jpg" alt="图4.1"></li>
+</ul>
+<p>游戏中的摄像机比较少使用到滚转角，此处推导经过俯仰角和偏航角后摄像机的方向：</p>
+<ul>
+<li><img src="摄像机_5.jpg" alt="图4.2"></li>
+</ul>
+<p>可得：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 由相机初始看向x正半轴推导出来的相机新的方向</span></span><br><span class="line">direction.x = <span class="built_in">cos</span>(glm::<span class="built_in">radians</span>(pitch)) * <span class="built_in">cos</span>(glm::<span class="built_in">radians</span>(yaw));</span><br><span class="line">direction.y = <span class="built_in">sin</span>(glm::<span class="built_in">radians</span>(pitch));</span><br><span class="line">direction.z = <span class="built_in">cos</span>(glm::<span class="built_in">radians</span>(pitch)) * <span class="built_in">sin</span>(glm::<span class="built_in">radians</span>(yaw));</span><br></pre></td></tr></table></figure>
+<p>可以用用旋转矩阵进行推导，出现结果不一致可参考<a target="_blank" rel="noopener" href="https://math.stackexchange.com/questions/1791209/euler-angle-to-direction-vector-which-is-right">链接</a>。</p>
+<h2 id="4-2-鼠标输入"><a href="#4-2-鼠标输入" class="headerlink" title="4.2 鼠标输入"></a>4.2 鼠标输入</h2><p>通过鼠标的移动来控制镜头：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 上一次鼠标位置</span></span><br><span class="line"><span class="type">float</span> lastX = <span class="number">400</span>, lastY = <span class="number">300</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 隐藏光标</span></span><br><span class="line"><span class="built_in">glfwSetInputMode</span>(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 回调函数</span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">mouse_callback</span><span class="params">(GLFWwindow* window, <span class="type">double</span> xpos, <span class="type">double</span> ypos)</span></span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 监听鼠标输入</span></span><br><span class="line"><span class="built_in">glfwSetCursorPosCallback</span>(window, mouse_callback);</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">mouse_callback</span><span class="params">(GLFWwindow* window, <span class="type">double</span> xpos, <span class="type">double</span> ypos)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="comment">// 防止首次抖动</span></span><br><span class="line">    <span class="keyword">if</span>(firstMouse)</span><br><span class="line">    &#123;</span><br><span class="line">        lastX = xpos;</span><br><span class="line">        lastY = ypos;</span><br><span class="line">        firstMouse = <span class="literal">false</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 计算x,y偏移</span></span><br><span class="line">    <span class="type">float</span> xoffset = xpos - lastX;</span><br><span class="line">    <span class="type">float</span> yoffset = lastY - ypos; </span><br><span class="line">    lastX = xpos;</span><br><span class="line">    lastY = ypos;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 灵敏度</span></span><br><span class="line">    <span class="type">float</span> sensitivity = <span class="number">0.05</span>;</span><br><span class="line">    <span class="comment">// 偏移乘上灵敏系数，获得合适的改变幅度</span></span><br><span class="line">    xoffset *= sensitivity;</span><br><span class="line">    yoffset *= sensitivity;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 将偏移加到仰俯，偏航角上</span></span><br><span class="line">    yaw   += xoffset;</span><br><span class="line">    pitch += yoffset;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 限制极限情况(在90度时视角会发生逆转)</span></span><br><span class="line">    <span class="keyword">if</span>(pitch &gt; <span class="number">89.0f</span>)</span><br><span class="line">        pitch = <span class="number">89.0f</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span>(pitch &lt; <span class="number">-89.0f</span>)</span><br><span class="line">        pitch = <span class="number">-89.0f</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 使用公式计算新的相机方向</span></span><br><span class="line">    glm::vec3 front;</span><br><span class="line">    front.x = <span class="built_in">cos</span>(glm::<span class="built_in">radians</span>(yaw)) * <span class="built_in">cos</span>(glm::<span class="built_in">radians</span>(pitch));</span><br><span class="line">    front.y = <span class="built_in">sin</span>(glm::<span class="built_in">radians</span>(pitch));</span><br><span class="line">    front.z = <span class="built_in">sin</span>(glm::<span class="built_in">radians</span>(yaw)) * <span class="built_in">cos</span>(glm::<span class="built_in">radians</span>(pitch));</span><br><span class="line">    cameraFront = glm::<span class="built_in">normalize</span>(front);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="4-3-缩放"><a href="#4-3-缩放" class="headerlink" title="4.3 缩放"></a>4.3 缩放</h2><p>缩放的原理是改变fov视野大小，当视野变小时，场景投影出来的空间就会减小，产生放大的感觉，视野变大则相反，代码：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> <span class="title">scroll_callback</span><span class="params">(GLFWwindow* window, <span class="type">double</span> xoffset, <span class="type">double</span> yoffset)</span></span></span><br><span class="line"><span class="function"></span></span><br><span class="line"><span class="function"><span class="comment">// 监听鼠标滚轮输入</span></span></span><br><span class="line"><span class="function"><span class="title">glfwSetScrollCallback</span><span class="params">(window, scroll_callback)</span></span>;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">scroll_callback</span><span class="params">(GLFWwindow* window, <span class="type">double</span> xoffset, <span class="type">double</span> yoffset)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(fov &gt;= <span class="number">1.0f</span> &amp;&amp; fov &lt;= <span class="number">45.0f</span>)</span><br><span class="line">        fov -= yoffset;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span>(fov &lt;= <span class="number">1.0f</span>)</span><br><span class="line">        fov = <span class="number">1.0f</span>;</span><br><span class="line">        </span><br><span class="line">    <span class="keyword">if</span>(fov &gt;= <span class="number">45.0f</span>)</span><br><span class="line">        fov = <span class="number">45.0f</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 更新投影矩阵的视野</span></span><br><span class="line">projection = glm::<span class="built_in">perspective</span>(glm::<span class="built_in">radians</span>(fov), <span class="number">800.0f</span> / <span class="number">600.0f</span>, <span class="number">0.1f</span>, <span class="number">100.0f</span>);</span><br></pre></td></tr></table></figure>
+<p>效果：</p>
+<ul>
+<li><img src="摄像机_6.gif" alt="图4.3"></li>
+</ul>
+<p><br></p>
+<h1 id="5-摄像机类"><a href="#5-摄像机类" class="headerlink" title="5. 摄像机类"></a>5. 摄像机类</h1><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">ifndef</span> CAMERA_H</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> CAMERA_H</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;glad/glad.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;glm/glm.hpp&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;glm/detail/type_vec.hpp&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;glm/gtc/matrix_transform.hpp&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 相机移动方向</span></span><br><span class="line"><span class="keyword">enum</span> <span class="title class_">Camera_Movement</span> &#123;</span><br><span class="line">    FORWARD,</span><br><span class="line">    BACKWARD,</span><br><span class="line">    LEFT,</span><br><span class="line">    RIGHT</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 默认偏航角</span></span><br><span class="line"><span class="comment">// 由于公式用的初态相机位置看向x轴正方向，因此偏航-90度，让相机看向z轴负方向</span></span><br><span class="line"><span class="type">const</span> <span class="type">float</span> YAW = <span class="number">-90.0f</span>;</span><br><span class="line"><span class="comment">// 默仰俯角</span></span><br><span class="line"><span class="type">const</span> <span class="type">float</span> PITCH = <span class="number">0.0f</span>;</span><br><span class="line"><span class="comment">// 默认移动速度</span></span><br><span class="line"><span class="type">const</span> <span class="type">float</span> SPEED = <span class="number">3.0f</span>;</span><br><span class="line"><span class="comment">// 默认鼠标灵敏系数，影响旋转</span></span><br><span class="line"><span class="type">const</span> <span class="type">float</span> SENSITIVITY = <span class="number">0.05f</span>;</span><br><span class="line"><span class="comment">// 默认缩放视野</span></span><br><span class="line"><span class="type">const</span> <span class="type">float</span> ZOOM = <span class="number">45.0f</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Camera</span></span><br><span class="line">&#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="comment">// 位置</span></span><br><span class="line">    glm::vec3 Position;</span><br><span class="line">    <span class="comment">// 向前方向 z轴</span></span><br><span class="line">    glm::vec3 Front;</span><br><span class="line">    <span class="comment">// 向上方向 y轴</span></span><br><span class="line">    glm::vec3 Up;</span><br><span class="line">    <span class="comment">// 向右方向 x轴</span></span><br><span class="line">    glm::vec3 Right;</span><br><span class="line">    <span class="comment">// 世界的上方向</span></span><br><span class="line">    glm::vec3 WorldUp;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 欧拉角</span></span><br><span class="line">    <span class="type">float</span> Yaw;</span><br><span class="line">    <span class="type">float</span> Pitch;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 其它属性</span></span><br><span class="line">    <span class="type">float</span> MovementSpeed;</span><br><span class="line">    <span class="type">float</span> MouseSensitivity;</span><br><span class="line">    <span class="type">double</span> Zoom;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 构造函数</span></span><br><span class="line">    <span class="built_in">Camera</span>(glm::vec3 position = glm::<span class="built_in">vec3</span>(<span class="number">0.0f</span>, <span class="number">0.0f</span>, <span class="number">0.0f</span>), glm::vec3 up = glm::<span class="built_in">vec3</span>(<span class="number">0.0f</span>, <span class="number">1.0f</span>, <span class="number">0.0f</span>), <span class="type">float</span> yaw = YAW, <span class="type">float</span> pitch = PITCH) : <span class="built_in">Front</span>(glm::<span class="built_in">vec3</span>(<span class="number">0.0f</span>, <span class="number">0.0f</span>, <span class="number">-1.0f</span>)), <span class="built_in">MovementSpeed</span>(SPEED), <span class="built_in">MouseSensitivity</span>(SENSITIVITY), <span class="built_in">Zoom</span>(ZOOM)</span><br><span class="line">    &#123;</span><br><span class="line">        Position = position;</span><br><span class="line">        WorldUp = up;</span><br><span class="line">        Yaw = yaw;</span><br><span class="line">        Pitch = pitch;</span><br><span class="line">        <span class="built_in">updateCameraVectors</span>();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="built_in">Camera</span>(<span class="type">float</span> posX, <span class="type">float</span> posY, <span class="type">float</span> posZ, <span class="type">float</span> upX, <span class="type">float</span> upY, <span class="type">float</span> upZ, <span class="type">float</span> yaw, <span class="type">float</span> pitch) : <span class="built_in">Front</span>(glm::<span class="built_in">vec3</span>(<span class="number">0.0f</span>, <span class="number">0.0f</span>, <span class="number">-1.0f</span>)), <span class="built_in">MovementSpeed</span>(SPEED), <span class="built_in">MouseSensitivity</span>(SENSITIVITY), <span class="built_in">Zoom</span>(ZOOM)</span><br><span class="line">    &#123;</span><br><span class="line">        Position = glm::<span class="built_in">vec3</span>(posX, posY, posZ);</span><br><span class="line">        WorldUp = glm::<span class="built_in">vec3</span>(upX, upY, upZ);</span><br><span class="line">        Yaw = yaw;</span><br><span class="line">        Pitch = pitch;</span><br><span class="line">        <span class="built_in">updateCameraVectors</span>();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 返回使用欧拉角的观察矩阵</span></span><br><span class="line">    <span class="function">glm::mat4 <span class="title">GetViewMatrix</span><span class="params">()</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> glm::<span class="built_in">lookAt</span>(Position, Position + Front, Up);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 键盘回调</span></span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">ProcessKeyboard</span><span class="params">(Camera_Movement direction, <span class="type">float</span> deltaTime)</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="type">float</span> velocity = MovementSpeed * deltaTime;</span><br><span class="line">        <span class="keyword">if</span> (direction == FORWARD)</span><br><span class="line">            Position += Front * velocity;</span><br><span class="line">        <span class="keyword">if</span> (direction == BACKWARD)</span><br><span class="line">            Position -= Front * velocity;</span><br><span class="line">        <span class="keyword">if</span> (direction == LEFT)</span><br><span class="line">            Position -= Right * velocity;</span><br><span class="line">        <span class="keyword">if</span> (direction == RIGHT)</span><br><span class="line">            Position += Right * velocity;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 鼠标回调</span></span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">ProcessMouseMovement</span><span class="params">(<span class="type">float</span> xoffset, <span class="type">float</span> yoffset, GLboolean constrainPitch = <span class="literal">true</span>)</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        xoffset *= MouseSensitivity;</span><br><span class="line">        yoffset *= MouseSensitivity;</span><br><span class="line"></span><br><span class="line">        Yaw += xoffset;</span><br><span class="line">        Pitch += yoffset;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 限制</span></span><br><span class="line">        <span class="keyword">if</span> (constrainPitch)</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">if</span> (Pitch &gt; <span class="number">89.0f</span>)</span><br><span class="line">                Pitch = <span class="number">89.0f</span>;</span><br><span class="line">            <span class="keyword">if</span> (Pitch &lt; <span class="number">-89.0f</span>)</span><br><span class="line">                Pitch = <span class="number">-89.0f</span>;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 使用更新的Euler角度更新“前向量”、“右向量”和“上向量”</span></span><br><span class="line">        <span class="built_in">updateCameraVectors</span>();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 鼠标滚轮回调</span></span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">ProcessMouseScroll</span><span class="params">(<span class="type">float</span> yoffset)</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        Zoom -= (<span class="type">float</span>)yoffset;</span><br><span class="line">        <span class="keyword">if</span> (Zoom &lt; <span class="number">1.0f</span>)</span><br><span class="line">            Zoom = <span class="number">1.0f</span>;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (Zoom &gt; <span class="number">100.0f</span>)</span><br><span class="line">            Zoom = <span class="number">100.0f</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">    <span class="comment">// 根据摄影机的（更新的）欧拉角计算前向量</span></span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">updateCameraVectors</span><span class="params">()</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        glm::vec3 front;</span><br><span class="line">        front.x = <span class="built_in">cos</span>(glm::<span class="built_in">radians</span>(Yaw)) * <span class="built_in">cos</span>(glm::<span class="built_in">radians</span>(Pitch));</span><br><span class="line">        front.y = <span class="built_in">sin</span>(glm::<span class="built_in">radians</span>(Pitch));</span><br><span class="line">        front.z = <span class="built_in">sin</span>(glm::<span class="built_in">radians</span>(Yaw)) * <span class="built_in">cos</span>(glm::<span class="built_in">radians</span>(Pitch));</span><br><span class="line">        Front = glm::<span class="built_in">normalize</span>(front);</span><br><span class="line">        <span class="comment">// 同时重新计算向右和向上矢量</span></span><br><span class="line">        <span class="comment">// 对向量进行归一化，因为向上或向下看得越多，它们的长度就越接近0，这会导致移动速度变慢</span></span><br><span class="line">        Right = glm::<span class="built_in">normalize</span>(glm::<span class="built_in">cross</span>(Front, WorldUp));</span><br><span class="line">        Up = glm::<span class="built_in">normalize</span>(glm::<span class="built_in">cross</span>(Right, Front));</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="keyword">endif</span></span></span><br></pre></td></tr></table></figure>
+<p><br></p>
+<h1 id="6-扩展阅读"><a href="#6-扩展阅读" class="headerlink" title="6. 扩展阅读"></a>6. 扩展阅读</h1><p><a target="_blank" rel="noopener" href="https://stackoverflow.com/questions/1568568/how-to-convert-euler-angles-to-directional-vector">如何将欧拉角转换为方向向量</a></p>
+<p><a target="_blank" rel="noopener" href="https://www.zhihu.com/question/433208062/answer/2428534603">欧拉角导致万向锁原因</a></p>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/m0_57585228/article/details/126534768">欧拉角与万向死锁</a></p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E5%9B%BE%E5%BD%A2%E5%AD%A6/" rel="tag"># 图形学</a>
+              <a href="/tags/OpenGL/" rel="tag"># OpenGL</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2023/07/26/graphic/opengl/%E5%9D%90%E6%A0%87/" rel="prev" title="坐标">
+                  <i class="fa fa-chevron-left"></i> 坐标
+                </a>
+            </div>
+            <div class="post-nav-item">
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2023</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">John Doe</span>
+  </div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/muse/" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/schemes/muse.js"></script><script src="/js/next-boot.js"></script>
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">false</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"none","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js","integrity":"sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI="}}</script>
+<script src="/js/third-party/math/mathjax.js"></script>
+
+
+
+</body>
+</html>
