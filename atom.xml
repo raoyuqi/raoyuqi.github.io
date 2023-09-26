@@ -6,7 +6,7 @@
   <link href="https://raoyuqi.github.io/atom.xml" rel="self"/>
   
   <link href="https://raoyuqi.github.io/"/>
-  <updated>2023-09-24T07:05:33.847Z</updated>
+  <updated>2023-09-26T04:01:46.120Z</updated>
   <id>https://raoyuqi.github.io/</id>
   
   <author>
@@ -15,6 +15,32 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>Pixels Per Unit</title>
+    <link href="https://raoyuqi.github.io/2023/09/26/unity/mix/Pixels%20Per%20Unit/"/>
+    <id>https://raoyuqi.github.io/2023/09/26/unity/mix/Pixels%20Per%20Unit/</id>
+    <published>2023-09-26T03:27:33.000Z</published>
+    <updated>2023-09-26T04:01:46.120Z</updated>
+    
+    <content type="html"><![CDATA[<h1 id="1-Pixels-Per-Unit"><a href="#1-Pixels-Per-Unit" class="headerlink" title="1. Pixels Per Unit"></a>1. Pixels Per Unit</h1><p>Pixels Per Unit可以在在资源导入设置：</p><ul><li><img src="1.1.jpg" alt="图1.1"></li></ul><p>这个值默认是100，可以自由修改，由于原图只有 16 x 16，此处将默认 100 修改为 16。作用是设置Unity中一个单位显示多少个像素，这里也就是显示16个像素。</p><p>创建一个正交相机，size设为 0.5，效果如下：</p><ul><li><img src="1.2.jpg" alt="图1.2"></li></ul><p>可以看到正好图片高度正好铺满 1 个单位，验证了Pixels Per Unit的作用，即设置一个单位显示多少个像素。</p><p><br></p><h1 id="2-Reference-Pixels-Per-Unit"><a href="#2-Reference-Pixels-Per-Unit" class="headerlink" title="2. Reference Pixels Per Unit"></a>2. Reference Pixels Per Unit</h1><p>这是Canvas中的设置，用来控制UI的大小，UGUI源码对Image的计算方式为：</p><figure class="highlight c#"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 核心代码</span></span><br><span class="line"><span class="keyword">private</span> <span class="built_in">float</span> m_CachedReferencePixelsPerUnit = <span class="number">100</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="built_in">float</span> pixelsPerUnit</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">get</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="built_in">float</span> spritePixelsPerUnit = <span class="number">100</span>;</span><br><span class="line">        <span class="keyword">if</span> (activeSprite)</span><br><span class="line">            spritePixelsPerUnit = activeSprite.pixelsPerUnit;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (canvas)</span><br><span class="line">            m_CachedReferencePixelsPerUnit = canvas.referencePixelsPerUnit;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> spritePixelsPerUnit / m_CachedReferencePixelsPerUnit;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">override</span> <span class="keyword">void</span> <span class="title">SetNativeSize</span>()</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">if</span> (activeSprite != <span class="literal">null</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="built_in">float</span> w = activeSprite.rect.width / pixelsPerUnit;</span><br><span class="line">        <span class="built_in">float</span> h = activeSprite.rect.height / pixelsPerUnit;</span><br><span class="line">        rectTransform.anchorMax = rectTransform.anchorMin;</span><br><span class="line">        rectTransform.sizeDelta = <span class="keyword">new</span> Vector2(w, h);</span><br><span class="line">        SetAllDirty();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><p>通过代码可以推出公式：UI大小 = 原图大小(Pixels) / (Pixels Per Unit / Reference Pixels Per Unit)，例：目标分辨率为 2000 x 1125，Pixels Per Unit为16，Reference Pixels Per Unit为100，通过公式可得出图分辨率为 320 x 180。</p><p>总结：</p><ol><li>Pixels Per Unit设置每单位填充像素</li><li>Reference Pixels Per Unit设置参考像素，每单位填充像素小于参考像素，会将UI方大至参考像素大小</li></ol>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;h1 id=&quot;1-Pixels-Per-Unit&quot;&gt;&lt;a href=&quot;#1-Pixels-Per-Unit&quot; class=&quot;headerlink&quot; title=&quot;1. Pixels Per Unit&quot;&gt;&lt;/a&gt;1. Pixels Per Unit&lt;/h1&gt;&lt;p&gt;Pixels P</summary>
+      
+    
+    
+    
+    <category term="Uniy" scheme="https://raoyuqi.github.io/categories/Uniy/"/>
+    
+    
+    <category term="Uniy" scheme="https://raoyuqi.github.io/tags/Uniy/"/>
+    
+    <category term="Mix" scheme="https://raoyuqi.github.io/tags/Mix/"/>
+    
+  </entry>
   
   <entry>
     <title>Mesh合并</title>

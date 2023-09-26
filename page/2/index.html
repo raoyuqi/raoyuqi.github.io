@@ -114,7 +114,7 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">13</span>
+          <span class="site-state-item-count">14</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -124,7 +124,7 @@
         <span class="site-state-item-name">分类</span></a>
       </div>
       <div class="site-state-item site-state-tags">
-        <span class="site-state-item-count">6</span>
+        <span class="site-state-item-count">7</span>
         <span class="site-state-item-name">标签</span>
       </div>
   </nav>
@@ -141,6 +141,240 @@
     </div>
 
     <div class="main-inner index posts-expand">
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://raoyuqi.github.io/2023/07/17/graphic/opengl/%E7%94%BB%E4%B8%89%E8%A7%92%E5%BD%A2/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="John Doe">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="奇遇的博客">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="undefined | 奇遇的博客">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2023/07/17/graphic/opengl/%E7%94%BB%E4%B8%89%E8%A7%92%E5%BD%A2/" class="post-title-link" itemprop="url">画三角形</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2023-07-17 20:46:20" itemprop="dateCreated datePublished" datetime="2023-07-17T20:46:20+08:00">2023-07-17</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2023-07-21 21:20:50" itemprop="dateModified" datetime="2023-07-21T21:20:50+08:00">2023-07-21</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E5%9B%BE%E5%BD%A2%E5%AD%A6/" itemprop="url" rel="index"><span itemprop="name">图形学</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <h1 id="1-图形渲染管线"><a href="#1-图形渲染管线" class="headerlink" title="1. 图形渲染管线"></a>1. 图形渲染管线</h1><h2 id="1-1-概念"><a href="#1-1-概念" class="headerlink" title="1.1 概念"></a>1.1 概念</h2><p>图形渲染管线是个流水线，分为好几个阶段，主要的工作为：将3D空间中的坐标转换为屏幕空间的2D坐标，并最终把2D坐标转换为有颜色的像素，形成画面。</p>
+<br>
+
+<h2 id="1-2-着色器"><a href="#1-2-着色器" class="headerlink" title="1.2 着色器"></a>1.2 着色器</h2><p>图形渲染管线分为多个阶段，每个阶段会把前一个阶段的输出作为输入。每个阶段高度专门化，非常容易并行执行，因此大多数显卡都有成千上万个小处理核心，处理核心负责在GPU上为每个流水线阶段处运行各自的程序，达到在渲染管线中快速并行地处理数据，这些小程序就是着色器。OpenGL着色器是用OpenGL着色器语言(OpenGL Shading Language, GLSL)写的。</p>
+<br>
+
+<h2 id="1-3-阶段"><a href="#1-3-阶段" class="headerlink" title="1.3 阶段"></a>1.3 阶段</h2><p>如图，蓝色部分是可以自定义的部分：</p>
+<ul>
+<li><img src="%E7%94%BB%E4%B8%89%E8%A7%92%E5%BD%A2_1.jpg" alt="图形渲染管线"></li>
+</ul>
+<ol>
+<li>顶点着色器</li>
+</ol>
+<p>以顶点坐标作为输入，将其处理成齐次坐标。</p>
+<ol start="2">
+<li>图元装配</li>
+</ol>
+<p>将顶点着色器输出的所有顶点作为输入，并将所有的点装配成指定的图元形状（点、三角形等）。</p>
+<ol start="3">
+<li>几何着色器</li>
+</ol>
+<p>把图元装配形成的顶点集合作为输入，这个阶段可以产生新顶点，构造出新的图元来生成其它形状。</p>
+<ol start="4">
+<li>光栅化阶段</li>
+</ol>
+<p>几何着色器的输出作为输入，这个阶段会把图元映射为最终屏幕上对应的像素，生成给片段着色器使用的片段。生成片段过程中会执行裁剪，丢弃超出视图以外的所有像素，提升下个阶段的效率。</p>
+<ol start="5">
+<li>片段着色器</li>
+</ol>
+<p>这里会计算出像素最后显示的颜色，是所有OpenGL高级效果产生的地方。通常，片段着色器包含3D场景的数据（比如光照、阴影、光的颜色等等），这些数据可以被用来计算最终像素的颜色</p>
+<ol start="6">
+<li>Alpha测试和混合</li>
+</ol>
+<p>这是最后一个阶段，会对片段进行一系列检测，如深度和模板测试，透明度测试及混合等。</p>
+<p><strong>现代OpenGL中，至少定义一个顶点着色器和片段着色器。</strong></p>
+<br>
+
+<h1 id="2-绘制三角形"><a href="#2-绘制三角形" class="headerlink" title="2. 绘制三角形"></a>2. 绘制三角形</h1><ol>
+<li>准备顶点数据</li>
+</ol>
+<p>tip: OpenGL是3D图形库，因此指定的坐标需要是3D坐标；OpenGL只处理标准化设备坐标，即-1.0到1.0范围内的坐标，并不是简单地把3D坐标转换为屏幕上的2D像素。</p>
+<p>给定如下输入坐标：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 将每个z坐标设为0，让它看上去是2D的</span></span><br><span class="line"><span class="type">float</span> vertices[] = &#123;</span><br><span class="line">    <span class="number">-0.5f</span>, <span class="number">-0.5f</span>, <span class="number">0.0f</span>,</span><br><span class="line">     <span class="number">0.5f</span>, <span class="number">-0.5f</span>, <span class="number">0.0f</span>,</span><br><span class="line">     <span class="number">0.0f</span>,  <span class="number">0.5f</span>, <span class="number">0.0f</span></span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<pre>
+深度可以理解为z坐标，它代表一个像素在空间中和你的距离，如果被别的像素遮挡，
+
+就看不到它了，将会被丢弃，以节省资源。
+</pre>
+
+<p>该组坐标在标准化设备中对应如下三角形：</p>
+<ul>
+<li><img src="%E7%94%BB%E4%B8%89%E8%A7%92%E5%BD%A2_2.jpg" alt="标准化设备中的三角形"></li>
+</ul>
+<p>接下来把顶点坐标传给渲染管线的第一个阶段（顶点着色器），顶点着色器会在GPU上创建内存，用来存储顶点数据，还要配置OpenGL如何解释这些内存，并且指定其如何发送给显卡。</p>
+<ol start="2">
+<li>创建VBO</li>
+</ol>
+<p>通过顶点缓冲对象(Vertex Buffer Objects, VBO)管理这个内存，它会在GPU内存（通常被成为显存）中存储大量顶点。使用缓冲对象的好处是可以批量发送数据到显卡上，而不是每次发送一个顶点。从CPU把数据发送到显卡相对较慢，但是当数据发送至显卡的内存中后，顶点着色器几乎能立即访问顶点。</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 创建VBO对象</span></span><br><span class="line"><span class="type">unsigned</span> <span class="type">int</span> VBO;</span><br><span class="line"><span class="built_in">glGenBuffers</span>(<span class="number">1</span>, &amp;VBO);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 绑定到GL_ARRAY_BUFFER，绑定后使用的任何（在GL_ARRAY_BUFFER目标上的）缓冲调用都会用来配置当前绑定的缓冲(VBO)</span></span><br><span class="line"><span class="built_in">glBindBuffer</span>(GL_ARRAY_BUFFER, VBO);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 把顶点数据复制到缓冲的内存中</span></span><br><span class="line"><span class="built_in">glBufferData</span>(GL_ARRAY_BUFFER, <span class="built_in">sizeof</span>(vertices), vertices, GL_STATIC_DRAW);</span><br></pre></td></tr></table></figure>
+
+<pre>
+希望显卡如何管理给定的数据的三种形式：
+
+- GL_STATIC_DRAW ：数据不会或几乎不会改变
+- GL_DYNAMIC_DRAW：数据会被改变很多
+- GL_STREAM_DRAW ：数据每次绘制时都会改变
+</pre>
+
+<p>这样顶点数据就被存储到显存中了，被VBO这个顶点缓冲对象所管理着。</p>
+<br>
+
+<ol start="3">
+<li>着色器</li>
+</ol>
+<p>用GLSL编写顶点着色器：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 版本号和核心模式</span></span><br><span class="line"><span class="meta">#version 330 core</span></span><br><span class="line"><span class="comment">// 设定了输入变量的位置值</span></span><br><span class="line"><span class="built_in">layout</span> (location = <span class="number">0</span>)</span><br><span class="line"><span class="comment">// 接收顶点数据</span></span><br><span class="line">in vec3 aPos;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    gl_Position = <span class="built_in">vec4</span>(aPos.x, aPos.y, aPos.z, <span class="number">1.0</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<br>
+
+<ol start="4">
+<li>编译着色器</li>
+</ol>
+<p>将第3步的着色器代码赋值给字符串：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 顶点着色器代码</span></span><br><span class="line"><span class="type">const</span> <span class="type">char</span> *vertexShaderSource = <span class="string">&quot;#version 330 core\n&quot;</span></span><br><span class="line">    <span class="string">&quot;layout (location = 0) in vec3 aPos;\n&quot;</span></span><br><span class="line">    <span class="string">&quot;void main()\n&quot;</span></span><br><span class="line">    <span class="string">&quot;&#123;\n&quot;</span></span><br><span class="line">    <span class="string">&quot;   gl_Position = vec4(aPos.x, aPos.y, aPos.z, 1.0);\n&quot;</span></span><br><span class="line">    <span class="string">&quot;&#125;\0&quot;</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 创建一个顶点着色器对象</span></span><br><span class="line"><span class="type">unsigned</span> <span class="type">int</span> vertexShader;</span><br><span class="line">vertexShader = <span class="built_in">glCreateShader</span>(GL_VERTEX_SHADER);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 着色器源码附加到着色器对象上</span></span><br><span class="line"><span class="built_in">glShaderSource</span>(vertexShader, <span class="number">1</span>, &amp;vertexShaderSource, <span class="literal">NULL</span>);</span><br><span class="line"><span class="comment">// 编译</span></span><br><span class="line"><span class="built_in">glCompileShader</span>(vertexShader);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 片段着色器代码</span></span><br><span class="line"><span class="type">const</span> <span class="type">char</span> *fragmentShaderSource = <span class="string">&quot;#version 330 core\n&quot;</span></span><br><span class="line">    <span class="string">&quot;layout (location = 0) out vec4 FragColor;\n&quot;</span></span><br><span class="line">    <span class="string">&quot;void main()\n&quot;</span></span><br><span class="line">    <span class="string">&quot;&#123;\n&quot;</span></span><br><span class="line">    <span class="string">&quot;   FragColor = vec4(1.0f, 0.5f, 0.2f, 1.0f);\n&quot;</span></span><br><span class="line">    <span class="string">&quot;&#125;\0&quot;</span>;</span><br><span class="line"></span><br><span class="line"><span class="type">unsigned</span> <span class="type">int</span> fragmentShader;</span><br><span class="line">fragmentShader = <span class="built_in">glCreateShader</span>(GL_FRAGMENT_SHADER);</span><br><span class="line"><span class="built_in">glShaderSource</span>(fragmentShader, <span class="number">1</span>, &amp;fragmentShaderSource, <span class="literal">NULL</span>);</span><br><span class="line"><span class="built_in">glCompileShader</span>(fragmentShader);</span><br></pre></td></tr></table></figure>
+
+<br>
+
+<ol start="5">
+<li>着色器程序</li>
+</ol>
+<p>着色器程序对象是多个着色器最终链接完成的版本。如果要使用刚才编译的着色器必须把它们链接(Link)为一个着色器程序对象，然后在渲染对象的时候激活这个着色器程序。已激活着色器程序的着色器将在发送渲染调用的时候被使用。</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 创建着色器程序对象</span></span><br><span class="line"><span class="type">unsigned</span> <span class="type">int</span> shaderProgram;</span><br><span class="line">shaderProgram = <span class="built_in">glCreateProgram</span>();</span><br><span class="line"><span class="comment">// 附加着色器对象到程序</span></span><br><span class="line"><span class="built_in">glAttachShader</span>(shaderProgram, vertexShader);</span><br><span class="line"><span class="built_in">glAttachShader</span>(shaderProgram, fragmentShader);</span><br><span class="line"><span class="comment">// 链接</span></span><br><span class="line"><span class="built_in">glLinkProgram</span>(shaderProgram);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 激活着色器程序</span></span><br><span class="line"><span class="built_in">glUseProgram</span>(shaderProgram);</span><br><span class="line"><span class="comment">// 释放不再需要的资源</span></span><br><span class="line"><span class="built_in">glDeleteShader</span>(vertexShader);</span><br><span class="line"><span class="built_in">glDeleteShader</span>(fragmentShader);</span><br></pre></td></tr></table></figure>
+
+<p>到这一步已经把输入顶点数据发送给了GPU，并指示了GPU如何在顶点和片段着色器中处理这些数据。接下来需要告诉OpenGL如何解释内存中的顶点数据，以及它该如何将顶点数据链接到顶点着色器的属性上。</p>
+<br>
+
+<ol start="6">
+<li>链接顶点属性</li>
+</ol>
+<p>必须手动指定输入数据的哪一个部分对应顶点着色器的哪一个顶点属性。所以必须在渲染前指定OpenGL该如何解释顶点数据，顶点缓冲数据会被解析为下面这样子：</p>
+<ul>
+<li><img src="%E7%94%BB%E4%B8%89%E8%A7%92%E5%BD%A2_3.jpg" alt="顶点缓冲数据"></li>
+</ul>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 解析顶点数据</span></span><br><span class="line"><span class="built_in">glVertexAttribPointer</span>(<span class="number">0</span>, <span class="number">3</span>, GL_FLOAT, GL_FALSE, <span class="number">3</span> * <span class="built_in">sizeof</span>(<span class="type">float</span>), (<span class="type">void</span>*)<span class="number">0</span>);</span><br><span class="line"><span class="comment">// 以顶点属性位置值作为参数，启用顶点属性，默认是禁用的</span></span><br><span class="line"><span class="built_in">glEnableVertexAttribArray</span>(<span class="number">0</span>);</span><br></pre></td></tr></table></figure>
+
+<br>
+
+<ol start="7">
+<li>顶点数组对象VAO</li>
+</ol>
+<p>顶点数组对象(Vertex Array Object, VAO)可以像顶点缓冲对象那样被绑定，任何随后的顶点属性调用都会储存在这个VAO中。好处是，当配置顶点属性指针时，只需要将那些调用执行一次，之后再绘制物体的时候只需要绑定相应的VAO就行了，因为设置的所有状态都将存储在VAO中。</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 创建一个VAO对象</span></span><br><span class="line"><span class="type">unsigned</span> <span class="type">int</span> VAO;</span><br><span class="line"><span class="built_in">glGenVertexArrays</span>(<span class="number">1</span>, &amp;VAO);</span><br></pre></td></tr></table></figure>
+
+<p>当打算绘制多个物体时，首先要生成&#x2F;配置所有的VAO（和必须的VBO及属性指针)，然后储存它们供后面使用。当打算绘制物体的时候就拿出相应的VAO，绑定它，绘制完物体后，再解绑VAO。这段代码应该看起来像这样：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// ..:: 初始化代码（只运行一次 (除非你的物体频繁改变)） :: ..</span></span><br><span class="line"><span class="comment">// 1. 绑定VAO</span></span><br><span class="line"><span class="built_in">glBindVertexArray</span>(VAO);</span><br><span class="line"><span class="comment">// 2. 把顶点数组复制到缓冲中供OpenGL使用</span></span><br><span class="line"><span class="built_in">glBindBuffer</span>(GL_ARRAY_BUFFER, VBO);</span><br><span class="line"><span class="built_in">glBufferData</span>(GL_ARRAY_BUFFER, <span class="built_in">sizeof</span>(vertices), vertices, GL_STATIC_DRAW);</span><br><span class="line"><span class="comment">// 3. 设置顶点属性指针</span></span><br><span class="line"><span class="built_in">glVertexAttribPointer</span>(<span class="number">0</span>, <span class="number">3</span>, GL_FLOAT, GL_FALSE, <span class="number">3</span> * <span class="built_in">sizeof</span>(<span class="type">float</span>), (<span class="type">void</span>*)<span class="number">0</span>);</span><br><span class="line"><span class="built_in">glEnableVertexAttribArray</span>(<span class="number">0</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">// [...]</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// ..:: 绘制代码（渲染循环中） :: ..</span></span><br><span class="line"><span class="comment">// 绘制物体</span></span><br><span class="line"><span class="built_in">glUseProgram</span>(shaderProgram);</span><br><span class="line"><span class="built_in">glBindVertexArray</span>(VAO);</span><br><span class="line"><span class="built_in">someOpenGLFunctionThatDrawsOurTriangle</span>();</span><br><span class="line"><span class="comment">// 解绑VAO</span></span><br></pre></td></tr></table></figure>
+
+<br>
+
+<ol start="8">
+<li>绘制三角形</li>
+</ol>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 激活着色器程序</span></span><br><span class="line"><span class="built_in">glUseProgram</span>(shaderProgram);</span><br><span class="line"><span class="comment">// 绑定VAO</span></span><br><span class="line"><span class="built_in">glBindVertexArray</span>(VAO);</span><br><span class="line"><span class="comment">// 画三角形，顶点数组的起始索引为0，绘制3个顶点</span></span><br><span class="line"><span class="built_in">glDrawArrays</span>(GL_TRIANGLES, <span class="number">0</span>, <span class="number">3</span>);</span><br></pre></td></tr></table></figure>
+
+<p>结果：</p>
+<ul>
+<li><img src="%E7%94%BB%E4%B8%89%E8%A7%92%E5%BD%A2_4.jpg" alt="三角形"></li>
+</ul>
+<br>
+
+<h1 id="3-元素缓冲对象"><a href="#3-元素缓冲对象" class="headerlink" title="3. 元素缓冲对象"></a>3. 元素缓冲对象</h1><p>元素缓冲对象(Element Buffer Object，EBO)，也叫索引缓冲对象(Index Buffer Object，IBO)。假设不绘制一个三角形而是绘制一个矩形。可以绘制两个三角形来组成一个矩形：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">float</span> vertices[] = &#123;</span><br><span class="line">    <span class="comment">// 第一个三角形</span></span><br><span class="line">    <span class="number">0.5f</span>, <span class="number">0.5f</span>, <span class="number">0.0f</span>,   <span class="comment">// 右上角</span></span><br><span class="line">    <span class="number">0.5f</span>, <span class="number">-0.5f</span>, <span class="number">0.0f</span>,  <span class="comment">// 右下角</span></span><br><span class="line">    <span class="number">-0.5f</span>, <span class="number">0.5f</span>, <span class="number">0.0f</span>,  <span class="comment">// 左上角</span></span><br><span class="line">    <span class="comment">// 第二个三角形</span></span><br><span class="line">    <span class="number">0.5f</span>, <span class="number">-0.5f</span>, <span class="number">0.0f</span>,  <span class="comment">// 右下角</span></span><br><span class="line">    <span class="number">-0.5f</span>, <span class="number">-0.5f</span>, <span class="number">0.0f</span>, <span class="comment">// 左下角</span></span><br><span class="line">    <span class="number">-0.5f</span>, <span class="number">0.5f</span>, <span class="number">0.0f</span>   <span class="comment">// 左上角</span></span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<p>一个矩形只有4个而不是6个顶点，这样会产生50%的额外开销，如果有包括上千个三角形的模型，这会产生一大堆浪费。可以通过<strong>只储存不同的顶点，并设定绘制这些顶点的顺序。</strong>这样子只要储存4个顶点就能绘制矩形了，之后只要指定绘制的顺序就行。元素缓冲区对象就是用来做这个的。</p>
+<p>EBO是一个缓冲区，就像一个顶点缓冲区对象一样，它存储OpenGL用来决定要绘制哪些顶点的顺序。定义不重复的顶点和绘制出矩形所需的索引顺序：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">float</span> vertices[] = &#123;</span><br><span class="line">    <span class="number">0.5f</span>, <span class="number">0.5f</span>, <span class="number">0.0f</span>,   <span class="comment">// 右上角</span></span><br><span class="line">    <span class="number">0.5f</span>, <span class="number">-0.5f</span>, <span class="number">0.0f</span>,  <span class="comment">// 右下角</span></span><br><span class="line">    <span class="number">-0.5f</span>, <span class="number">-0.5f</span>, <span class="number">0.0f</span>, <span class="comment">// 左下角</span></span><br><span class="line">    <span class="number">-0.5f</span>, <span class="number">0.5f</span>, <span class="number">0.0f</span>   <span class="comment">// 左上角</span></span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 注意索引从0开始! </span></span><br><span class="line"><span class="comment">// 此例的索引(0,1,2,3)就是顶点数组vertices的下标，</span></span><br><span class="line"><span class="comment">// 这样可以由下标代表顶点组合成矩形</span></span><br><span class="line"><span class="type">unsigned</span> <span class="type">int</span> indices[] = &#123;</span><br><span class="line">    <span class="number">0</span>, <span class="number">1</span>, <span class="number">3</span>, <span class="comment">// 第一个三角形</span></span><br><span class="line">    <span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>  <span class="comment">// 第二个三角形</span></span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 创建EBO对象</span></span><br><span class="line"><span class="type">unsigned</span> <span class="type">int</span> EBO;</span><br><span class="line"><span class="built_in">glGenBuffers</span>(<span class="number">1</span>, &amp;EBO);</span><br><span class="line"><span class="comment">// 把索引复制到缓冲里</span></span><br><span class="line"><span class="built_in">glBufferData</span>(GL_ELEMENT_ARRAY_BUFFER, <span class="built_in">sizeof</span>(indices), indices, GL_STATIC_DRAW);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 从索引缓冲区渲染三角形</span></span><br><span class="line"><span class="built_in">glBindBuffer</span>(GL_ELEMENT_ARRAY_BUFFER, EBO);</span><br><span class="line"><span class="built_in">glDrawElements</span>(GL_TRIANGLES, <span class="number">6</span>, GL_UNSIGNED_INT, <span class="number">0</span>);</span><br></pre></td></tr></table></figure>
+
+<p>结果：</p>
+<ul>
+<li><img src="%E7%94%BB%E4%B8%89%E8%A7%92%E5%BD%A2_5.jpg" alt="矩形"></li>
+</ul>
+<pre>
+线框模式
+
+glPolygonMode(GL_FRONT_AND_BACK, GL_LINE)函数配置OpenGL如何绘制图元。
+
+第一个参数表示打算将其应用到所有的三角形的正面和背面，第二个参数表示用线来绘制。
+
+之后的绘制调用会一直以线框模式绘制三角形，直到调用glPolygonMode(GL_FRONT_AND_BACK, GL_FILL)将其设置回默认模式。
+</pre>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
 
     
 
